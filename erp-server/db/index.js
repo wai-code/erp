@@ -17,8 +17,8 @@ db.serialize(function () {
     email TEXT,
     phone TEXT,
     other TEXT,
-    created_time DATETIME,
-    updated_time DATETIME,
+    created_at DATETIME,
+    updated_at DATETIME,
     operator TEXT
   )`);
 
@@ -29,10 +29,52 @@ db.serialize(function () {
     supplier_name TEXT,
     purchase_price DECIMAL(10, 2),
     sales_price DECIMAL(10, 2),
-    created_time DATETIME,
-    updated_time DATETIME,
+    created_at DATETIME,
+    updated_at DATETIME,
     operator TEXT,
     CONSTRAINT unique_product UNIQUE (product_name, product_model)
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS purchases (
+    ID INTEGER PRIMARY KEY,
+    project_name TEXT,
+    product_name TEXT,
+    product_model TEXT,
+    unit_price DECIMAL(10, 2),
+    purchase_quantity INTEGER,
+    arrival_quantity INTEGER,
+    order_date DATE,
+    last_arrival_date DATE,
+    purchase_cycle INTEGER,
+    shipment_method TEXT,
+    shipping_cost DECIMAL(10, 2),
+    corresponding_order TEXT,
+    purchase_contract TEXT,
+    is_completed BOOLEAN,
+    loss_quantity INTEGER,
+    created_at DATETIME,
+    updated_at DATETIME,
+    operator TEXT
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS inbound_records (
+    ID INTEGER PRIMARY KEY,
+    product_name TEXT,
+    product_model TEXT,
+    purchase_project TEXT,
+    incoming_quantity INTEGER,
+    purchase_unit_price DECIMAL(10, 2),
+    created_at DATETIME,
+    updated_at DATETIME,
+    operator TEXT
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS inventory (
+    ID INTEGER PRIMARY KEY,
+    product_name TEXT,
+    product_model TEXT,
+    stock_quantity INTEGER,
+    updated_at DATETIME
   )`);
 });
 

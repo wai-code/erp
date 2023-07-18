@@ -144,12 +144,6 @@ const items = [
         title: '权限管理',
         permiss: '13',
     },
-    {
-        icon: 'CoffeeCup',
-        index: '/donate',
-        title: '支持作者',
-        permiss: '14',
-    },
 ];
 
 const route = useRoute();

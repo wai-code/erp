@@ -4,34 +4,38 @@ const config = require('./config')
 // 打开数据库连接
 const db = new sqlite3.Database(config.dbFile);
 const sql = `
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT UNIQUE,
-  password TEXT
+  phone TEXT,
+  email TEXT,
+  password TEXT,
+  image BLOB
 );
 
-CREATE TABLE IF NOT EXISTS roles (
+CREATE TABLE IF NOT EXISTS role (
   ID INTEGER PRIMARY KEY,
   name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS permissions (
+CREATE TABLE IF NOT EXISTS user_role (
   ID INTEGER PRIMARY KEY,
-  menu_name TEXT NOT NULL UNIQUE,
+  user_name TEXT NOT NULL,
+  role_name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS resource (
+  ID INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  type TEXT,
   url TEXT,
   parent_id INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS role_permissions (
+CREATE TABLE IF NOT EXISTS permission (
   ID INTEGER PRIMARY KEY,
   role_name TEXT NOT NULL,
-  menu_name TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS user_roles (
-  ID INTEGER PRIMARY KEY,
-  user_name TEXT NOT NULL,
-  role_name TEXT NOT NULL
+  reource_id TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS suppliers (
@@ -101,7 +105,20 @@ CREATE TABLE IF NOT EXISTS inventory (
   updated_at DATETIME
 );
 
-INSERT INTO users (name, password) VALUES ('John Doe', '123456');
+INSERT INTO user (name, password) VALUES ('5plus', '123456');
+INSERT INTO user (name, password) VALUES ('zhangsan', '123456');
+INSERT INTO user (name, password) VALUES ('lisi', '123456');
+INSERT INTO user (name, password) VALUES ('wangwu', '123456');
+
+INSERT INTO role (name) VALUES ('Administrator');
+INSERT INTO role (name) VALUES ('Purchaser');
+INSERT INTO role (name) VALUES ('Salesperson');
+INSERT INTO role (name) VALUES ('Accountant');
+
+INSERT INTO user_role (user_name,role_name) VALUES ('5plus','Administrator');
+INSERT INTO user_role (user_name,role_name) VALUES ('zhangsan','Purchaser');
+INSERT INTO user_role (user_name,role_name) VALUES ('lisi','Salesperson');
+INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 `;
 
 // 初始化数据

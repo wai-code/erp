@@ -1,8 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
-const config = require('./config')
+const config = require('./config');
+const fs = require('fs');
 
 // 打开数据库连接
-const db = new sqlite3.Database(config.dbFile);
 const sql = `
 CREATE TABLE IF NOT EXISTS user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -122,13 +122,24 @@ INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 `;
 
 // 初始化数据
-db.exec(sql, (err) => {
-  if (err) {
-    console.error(err.message);
-  } else {
-    console.log('数据库初始化和SQL代码批量执行成功');
+function initDB() {
+  if (fs.existsSync(config.dbFile)) {
+    console.log('数据已存在，无需初始化');
+    return;
   }
-});
 
-// 关闭数据库连接
-db.close();
+  console.log('数据库不存在，开始初始化');
+  const db = new sqlite3.Database(config.dbFile);
+  db.exec(sql, (err) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log('数据库初始化和SQL代码批量执行成功');
+    }
+  });
+  // 关闭数据库连接
+  db.close();
+}
+
+initDB();
+

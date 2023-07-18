@@ -2,6 +2,66 @@ const express = require('express');
 const router = express.Router();
 const sqlExec = require('../db').sqlExec;
 
+// 查询用户权限的资源信息
+function queryUserPermissions(db, userName, callback) {
+    const query = `
+      SELECT resource.* 
+      FROM user
+      JOIN user_role ON user.name = user_role.user_name
+      JOIN role ON user_role.role_name = role.name
+      JOIN permission ON role.name = permission.role_name
+      JOIN resource ON permission.resource_id = resource.id
+      WHERE user.name = ?
+    `;
+
+    db.all(query, [userName], (err, rows) => {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        // 将parent_id翻译成嵌套JSON
+        const resources = buildNestedJSON(rows);
+        callback(null, resources);
+    });
+}
+
+// 递归构建嵌套JSON
+function buildNestedJSON(rows, parentId = null) {
+    const result = [];
+
+    rows.forEach(row => {
+        if (row.parent_id === parentId) {
+            const resource = {
+                id: row.id,
+                name: row.name,
+                title: row.title,
+                type: row.type,
+                url: row.url,
+                children: buildNestedJSON(rows, row.id)
+            };
+
+            result.push(resource);
+        }
+    });
+
+    return result;
+}
+
+router.get('/user/:name/permission', (req, res) => {
+    const { name } = req.params;
+    sqlExec((db) => {
+        queryUserPermissions(db, name, (err, result) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                res.json(result);
+            }
+        })
+    });
+});
+
 // 获取所有用户
 router.get('/user/list', (req, res) => {
     sqlExec((db) => {
@@ -84,4 +144,5 @@ router.get('/user/delete/:id', (req, res) => {
         });
     });
 });
+
 module.exports = router;

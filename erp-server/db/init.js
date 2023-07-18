@@ -14,32 +14,33 @@ CREATE TABLE IF NOT EXISTS user (
 );
 
 CREATE TABLE IF NOT EXISTS role (
-  ID INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS user_role (
-  ID INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   user_name TEXT NOT NULL,
   role_name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS resource (
-  ID INTEGER PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE,
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  title TEXT NOT NULL,
   type TEXT,
   url TEXT,
   parent_id INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS permission (
-  ID INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   role_name TEXT NOT NULL,
-  reource_id TEXT NOT NULL
+  resource_id INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS suppliers (
-  ID INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS supplier (
+  id INTEGER PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
   address TEXT,
   email TEXT,
@@ -50,8 +51,8 @@ CREATE TABLE IF NOT EXISTS suppliers (
   operator TEXT
 );
 
-CREATE TABLE IF NOT EXISTS products (
-  ID INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS product (
+  id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   model TEXT NOT NULL,
   supplier_name TEXT,
@@ -63,8 +64,8 @@ CREATE TABLE IF NOT EXISTS products (
   CONSTRAINT unique_product UNIQUE (name, model)
 );
 
-CREATE TABLE IF NOT EXISTS purchases (
-  ID INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS purchas (
+  id INTEGER PRIMARY KEY,
   project_name TEXT,
   product_name TEXT,
   product_model TEXT,
@@ -85,8 +86,8 @@ CREATE TABLE IF NOT EXISTS purchases (
   operator TEXT
 );
 
-CREATE TABLE IF NOT EXISTS inbound_records (
-  ID INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS inbound_record (
+  id INTEGER PRIMARY KEY,
   product_name TEXT,
   product_model TEXT,
   purchase_project TEXT,
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS inbound_records (
 );
 
 CREATE TABLE IF NOT EXISTS inventory (
-  ID INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   product_name TEXT,
   product_model TEXT,
   stock_quantity INTEGER,
@@ -119,6 +120,25 @@ INSERT INTO user_role (user_name,role_name) VALUES ('5plus','Administrator');
 INSERT INTO user_role (user_name,role_name) VALUES ('zhangsan','Purchaser');
 INSERT INTO user_role (user_name,role_name) VALUES ('lisi','Salesperson');
 INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
+
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (1, 'home', '系统首页', 'menu', '/home', NULL);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (2, 'todo', '我的待办清单', 'data', '/api/todo/list', NULL);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (3, 'purchase', '采购管理', 'menu', '/purchase', NULL);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (4, 'product', '产品管理', 'menu', '/purchase/product', 3);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (5, 'supplier', '供应商管理', 'menu', '/purchase/supplier', 3);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (6, 'orders', '采购订单', 'menu', '/purchase/orders', 3);
+
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 1);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 2);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 3);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 4);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 5);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 6);
+
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 2);
+INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', 2);
+INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', 2);
+INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', 2);
 `;
 
 // 初始化数据

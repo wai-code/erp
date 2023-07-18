@@ -6,7 +6,7 @@ const config = require('./config')
 let dbPool = null;
 
 function createDBPool() {
-    createPool({
+    dbPool = createPool({
         max: 30,
         min: 5,
         create: () => {
@@ -36,4 +36,22 @@ function getDBPool() {
     return dbPool;
 }
 
-module.exports = { pool: getDBPool };
+function sqlExec(callback) {
+    let dbRef = null;
+    getDBPool().acquire().then((db) => {
+        // 执行数据库操作
+        callback(db);
+        dbRef = db;
+    }).catch((err) => {
+        console.error('Failed to acquire database connection:', err);
+        if (dbRef) {
+            dbPool.release(dbRef); // 释放连接回连接池
+        }
+    }).finally(() => {
+        if (dbRef) {
+            dbPool.release(dbRef); // 释放连接回连接池
+        }
+    });
+}
+
+module.exports = {sqlExec};

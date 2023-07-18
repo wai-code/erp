@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('./db').pool();
+const sqlExec = require('../db').sqlExec;
 
 // 获取所有用户
 router.get('/users', (req, res) => {
-    pool.acquire().then((db) => {
+    sqlExec((db) => {
         // 执行数据库操作
         db.all('SELECT * FROM users', (err, rows) => {
             if (err) {
@@ -14,9 +14,6 @@ router.get('/users', (req, res) => {
                 res.json(rows);
             }
         });
-        dbPool.release(db); // 释放连接回连接池
-    }).catch((err) => {
-        console.error('Failed to acquire database connection:', err);
     });
 })
 

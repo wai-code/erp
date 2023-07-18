@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 // 初始化数据
-require('./db/index.js');
+require('./db/init.js');
 
 
 // 解析请求体中的 JSON 数据
@@ -21,6 +21,8 @@ app.use(responseInterceptor);
 // 引入 api.js 路由
 const apiRouter = require('./routes/api');
 app.use('/api', apiRouter);
+const usersRouter = require('./routes/users');
+app.use('/api', usersRouter);
 
 // 启动服务器
 app.listen(port, () => {

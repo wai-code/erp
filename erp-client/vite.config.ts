@@ -22,7 +22,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			// 配置代理，将所有以 '/api' 开头的请求代理到 http://localhost:3000
-			'/api': 'http://localhost:3000/api/',
+			'/api': 'http://localhost:3000/api',
 		},
 	},
 });

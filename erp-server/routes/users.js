@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const sqlExec = require('../db').sqlExec;
+const jwt = require('jsonwebtoken');
+
 
 // 查询用户权限的资源信息
 function queryUserPermissions(db, userName, callback) {
@@ -47,6 +49,30 @@ function buildNestedJSON(rows, parentId = null) {
 
     return result;
 }
+
+router.post('/login', (req, res) => {
+    const { name, password } = req.body;
+    const secretKey = name; // 自定义的秘钥，用于签名令牌
+
+    // 在真实应用中，应该根据用户名查询数据库验证密码
+    sqlExec(db => {
+        db.get('SELECT * FROM user WHERE name = ?', name, (err, row) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            if (row && row.name === name && row.password === password) {
+                const token = jwt.sign({ name, password }, secretKey, { expiresIn: '1h' });
+                res.json({ token });
+                return;
+            }
+
+            res.status(401).json({ message: 'Invalid credentials.' });
+        });
+    })
+});
 
 router.get('/user/:name/permission', (req, res) => {
     const { name } = req.params;
@@ -110,6 +136,7 @@ router.post('/user', (req, res) => {
             });
     });
 });
+
 // 更新用户
 router.post('/user/:id', (req, res) => {
     const { id } = req.params;
@@ -128,6 +155,7 @@ router.post('/user/:id', (req, res) => {
             });
     });
 });
+
 // 删除用户
 router.get('/user/delete/:id', (req, res) => {
     const { id } = req.params;

@@ -19,8 +19,6 @@ app.use(authInterceptor);
 app.use(responseInterceptor);
 
 // 引入 api.js 路由
-const apiRouter = require('./routes/api');
-app.use('/api', apiRouter);
 const usersRouter = require('./routes/users');
 app.use('/api', usersRouter);
 

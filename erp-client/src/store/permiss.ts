@@ -1,23 +1,35 @@
 import { defineStore } from 'pinia';
-
-interface ObjectList {
-	[key: string]: string[];
-}
+import * as api from '../api'
+import { MenuItem } from '../interfaces';
 
 export const usePermissStore = defineStore('permiss', {
 	state: () => {
-		const keys = localStorage.getItem('ms_keys');
+		const username = localStorage.getItem('username');
+		const menus: MenuItem[] = [];
 		return {
-			key: keys ? JSON.parse(keys) : <string[]>[],
-			defaultList: <ObjectList>{
-				admin: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'],
-				user: ['1', '2', '3', '11', '13', '14', '15']
-			}
+			username,
+			menus
 		};
 	},
+	getters: {
+		getMenus(): MenuItem[] {
+			return this.menus;
+		},
+	},
 	actions: {
-		handleSet(val: string[]) {
-			this.key = val;
+		async init() {
+			if (!this.username) {
+				this.menus = [];
+				return;
+			}
+			let response = await api.getUserPermission(this.username);
+			if (!response || response.status != 200) {
+				this.menus = [];
+				return;
+			}
+
+			console.log(response.data);
+			this.menus = <MenuItem[]>response.data;
 		}
 	}
 });

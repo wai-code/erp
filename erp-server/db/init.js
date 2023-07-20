@@ -121,24 +121,21 @@ INSERT INTO user_role (user_name,role_name) VALUES ('zhangsan','Purchaser');
 INSERT INTO user_role (user_name,role_name) VALUES ('lisi','Salesperson');
 INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (1, 'home', '系统首页', 'menu', '/home', NULL);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (1, 'dashboard', '采购管理', 'menu', '/dashboard', NULL);
 INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (2, 'todo', '我的待办清单', 'data', '/api/todo/list', NULL);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (3, 'purchase', '采购管理', 'menu', '/purchase', NULL);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (4, 'product', '产品管理', 'menu', '/purchase/product', 3);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (5, 'supplier', '供应商管理', 'menu', '/purchase/supplier', 3);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (6, 'orders', '采购订单', 'menu', '/purchase/orders', 3);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (3, 'product', '产品管理', 'menu', '/purchase/product', 1);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (4, 'supplier', '供应商管理', 'menu', '/purchase/supplier', 1);
+INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (5, 'orders', '采购订单', 'menu', '/purchase/orders', 1);
 
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 1);
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 2);
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 3);
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 4);
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 5);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 6);
 
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 2);
-INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', 2);
-INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', 2);
-INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', 2);
+INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', 1);
+INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', 1);
+INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', 1);
 `;
 
 // 初始化数据

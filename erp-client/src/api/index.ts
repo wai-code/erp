@@ -15,9 +15,13 @@ api.interceptors.request.use(
 
         // For non-login requests, retrieve token from localStorage and add it to the request headers
         if (config.url !== '/login') {
-            const token = localStorage.getItem('authToken');
+            const token = localStorage.getItem('token');
+            const username: string | null = localStorage.getItem('username');
             if (token && config.headers) {
-                config.headers['Authorization'] = `Bearer ${token}`;
+                config.headers['token'] = token;
+            }
+            if (username && config.headers) {
+                config.headers['username'] = username;
             }
         }
 

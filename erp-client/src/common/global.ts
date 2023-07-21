@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { Resource } from './interfaces'
 import * as api from '../api'
 

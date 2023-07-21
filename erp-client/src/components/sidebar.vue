@@ -21,7 +21,7 @@
               <el-icon>
                 <component :is="item.icon"></component>
               </el-icon>
-              <span>{{ item.title }}</span>
+              <span>{{ item.label }}</span>
             </template>
             <template v-for="subItem in item.children">
               <el-sub-menu
@@ -30,14 +30,14 @@
                 :key="subItem.url"
                 v-show="hasPermission(subItem)"
               >
-                <template #title>{{ subItem.title }}</template>
+                <template #title>{{ subItem.label }}</template>
                 <el-menu-item
                   v-for="(threeItem, i) in subItem.children"
                   :key="i"
                   :index="threeItem.url"
                   v-show="hasPermission(threeItem)"
                 >
-                  {{ threeItem.title }}
+                  {{ threeItem.label }}
                 </el-menu-item>
               </el-sub-menu>
               <el-menu-item
@@ -46,7 +46,7 @@
                 :key="subItem.url + item.id"
                 v-show="hasPermission(subItem)"
               >
-                {{ subItem.title }}
+                {{ subItem.label }}
               </el-menu-item>
             </template>
           </el-sub-menu>
@@ -60,7 +60,7 @@
             <el-icon>
               <component :is="item.icon"></component>
             </el-icon>
-            <template #title>{{ item.title }}</template>
+            <template #title>{{ item.label }}</template>
           </el-menu-item>
         </template>
       </template>

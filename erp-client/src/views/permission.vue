@@ -1,136 +1,82 @@
 <template>
-	<div class="container">
-		<div class="plugins-tips">通过 v-permiss 自定义指令实现权限管理，使用非 admin 账号登录，可查看效果。</div>
-		<div class="mgb20">
-			<span class="label">角色：</span>
-			<el-select v-model="role" @change="handleChange">
-				<el-option label="超级管理员" value="admin"></el-option>
-				<el-option label="普通用户" value="user"></el-option>
-			</el-select>
-		</div>
-		<div class="mgb20 tree-wrapper">
-			<el-tree
-				ref="tree"
-				:data="data"
-				node-key="id"
-				default-expand-all
-				show-checkbox
-				:default-checked-keys="checkedKeys"
-			/>
-		</div>
-		<el-button type="primary" @click="onSubmit">保存权限</el-button>
-	</div>
+  <div class="container">
+    <div class="mgb20">
+      <span class="label">角色：</span>
+      <el-select v-model="role" @change="handleChange">
+        <el-option
+          v-for="role in roles"
+          :label="role.title"
+          :value="role.name"
+          :key="role.id"
+        ></el-option>
+      </el-select>
+    </div>
+    <div class="mgb20 tree-wrapper">
+      <el-tree
+        ref="tree"
+        :data="resources"
+        default-expand-all
+        show-checkbox
+        :default-checked-keys="checkedKeys"
+      />
+    </div>
+    <el-button type="primary" @click="onSubmit">保存权限</el-button>
+  </div>
 </template>
 
-<script setup lang="ts" name="permission">
-import { ref } from 'vue';
-import { ElTree } from 'element-plus';
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { ElTree } from "element-plus";
+import * as api from "../api";
+import { getResourceList } from "../common/global";
+import { Resource } from "../common/interfaces";
 
-const role = ref<string>('admin');
+const role = ref<string>("Administrator");
+const roles = ref<{ id: number; name: string; title: string }[]>([]);
+const resources = ref<Resource[]>([]);
+const checkedKeys = ref<number[]>([]);
 
-interface Tree {
-	id: string;
-	label: string;
-	children?: Tree[];
-}
+onMounted(async () => {
+  const response = await api.getRoleList();
+  if (response && response.status === 200) {
+    roles.value.push(...(await response.data));
+  } else {
+    console.log("get user permission failed.");
+  }
 
-const data: Tree[] = [
-	{
-		id: '1',
-		label: '系统首页'
-	},
-	{
-		id: '2',
-		label: '基础表格',
-		children: [
-			{
-				id: '15',
-				label: '编辑'
-			},
-			{
-				id: '16',
-				label: '删除'
-			}
-		]
-	},
-	{
-		id: '3',
-		label: 'tab选项卡'
-	},
-	{
-		id: '4',
-		label: '表单相关',
-		children: [
-			{
-				id: '5',
-				label: '基本表单'
-			},
-			{
-				id: '6',
-				label: '文件上传'
-			},
-			{
-				id: '7',
-				label: '三级菜单',
-				children: [
-					{
-						id: '8',
-						label: '富文本编辑器'
-					},
-					{
-						id: '9',
-						label: 'markdown编辑器'
-					}
-				]
-			}
-		]
-	},
-	{
-		id: '10',
-		label: '自定义图标'
-	},
-	{
-		id: '11',
-		label: 'schart图表'
-	},
+  resources.value.push(...(await getResourceList()));
+  await setDefaultPermission();
+});
 
-	{
-		id: '13',
-		label: '权限管理'
-	},
-	{
-		id: '14',
-		label: '支持作者'
-	}
-];
-
-const permiss = usePermissStore();
-
-// 获取当前权限
-const checkedKeys = ref<string[]>([]);
-const getPremission = () => {
-	// 请求接口返回权限
-	checkedKeys.value = permiss.defaultList[role.value];
+const setDefaultPermission = async () => {
+  const resp = await api.getRolePermission(role.value);
+  if (resp && resp.status === 200) {
+    const resourceIds = <number[]>await resp.data;
+    checkedKeys.value.length = 0;
+    checkedKeys.value.push(...resourceIds);
+    console.log(checkedKeys);
+  } else {
+    console.log("get role permissions failed.");
+  }
 };
-getPremission();
 
 // 保存权限
 const tree = ref<InstanceType<typeof ElTree>>();
-const onSubmit = () => {
-	// 获取选中的权限
-	console.log(tree.value!.getCheckedKeys(false));
+const handleChange = async () => {
+  await setDefaultPermission();
 };
 
-const handleChange = (val: string[]) => {
-	tree.value!.setCheckedKeys(permiss.defaultList[role.value]);
+const onSubmit = () => {
+  // 获取选中的权限
+  console.log(tree.value!.getCheckedKeys(false));
 };
 </script>
 
 <style scoped>
 .tree-wrapper {
-	max-width: 500px;
+  max-width: 500px;
 }
 .label {
-	font-size: 14px;
+  font-size: 14px;
 }
 </style>

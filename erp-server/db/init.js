@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS role (
   id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE
+  name TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS user_role (
@@ -27,7 +28,7 @@ CREATE TABLE IF NOT EXISTS user_role (
 CREATE TABLE IF NOT EXISTS resource (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
-  title TEXT NOT NULL,
+  label TEXT NOT NULL,
   icon TEXT,
   type TEXT,
   url TEXT,
@@ -112,27 +113,27 @@ INSERT INTO user (name, password) VALUES ('zhangsan', '123456');
 INSERT INTO user (name, password) VALUES ('lisi', '123456');
 INSERT INTO user (name, password) VALUES ('wangwu', '123456');
 
-INSERT INTO role (name) VALUES ('Administrator');
-INSERT INTO role (name) VALUES ('Purchaser');
-INSERT INTO role (name) VALUES ('Salesperson');
-INSERT INTO role (name) VALUES ('Accountant');
+INSERT INTO role (name,title) VALUES ('Administrator','管理员');
+INSERT INTO role (name,title) VALUES ('Purchaser','采购员');
+INSERT INTO role (name,title) VALUES ('Salesperson','销售员');
+INSERT INTO role (name,title) VALUES ('Accountant','财务人员');
 
 INSERT INTO user_role (user_name,role_name) VALUES ('5plus','Administrator');
 INSERT INTO user_role (user_name,role_name) VALUES ('zhangsan','Purchaser');
 INSERT INTO user_role (user_name,role_name) VALUES ('lisi','Salesperson');
 INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (10, 'Dashboard', '首页', 'Odometer', 'menu', '/dashboard', NULL);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (20, 'Purchase', '采购管理', 'Odometer', 'menu', '/purchase', NULL);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (21, 'Product', '产品管理', 'Odometer', 'menu', '/purchase/product', 20);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (22, 'Supplier', '供应商管理', 'Odometer', 'menu', '/purchase/supplier', 20);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (23, 'PurchaseOrder', '采购订单', 'Odometer', 'menu', '/purchase/order', 20);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (30, 'Sales', '销售管理', 'Odometer', 'menu', '/sales', NULL);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (31, 'Customer', '客户管理', 'Odometer', 'menu', '/sales/customer', 30);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (32, 'SalesOrder', '销售订单', 'Odometer', 'menu', '/sales/order', 30);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (90, 'System', '系统管理', 'Odometer', 'menu', '/system', NULL);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (91, 'User', '用户管理', 'Odometer', 'menu', '/system/user', 90);
-INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (92, 'User', '权限管理', 'Odometer', 'menu', '/system/permission', 90);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (10, 'Dashboard', '首页', 'Odometer', 'menu', '/dashboard', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (20, 'Purchase', '采购管理', 'Odometer', 'menu', '/purchase', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (21, 'Product', '产品管理', 'Odometer', 'menu', '/purchase/product', 20);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (22, 'Supplier', '供应商管理', 'Odometer', 'menu', '/purchase/supplier', 20);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (23, 'PurchaseOrder', '采购订单', 'Odometer', 'menu', '/purchase/order', 20);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (30, 'Sales', '销售管理', 'Odometer', 'menu', '/sales', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (31, 'Customer', '客户管理', 'Odometer', 'menu', '/sales/customer', 30);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (32, 'SalesOrder', '销售订单', 'Odometer', 'menu', '/sales/order', 30);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (90, 'System', '系统管理', 'Odometer', 'menu', '/system', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (91, 'User', '用户管理', 'Odometer', 'menu', '/system/user', 90);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (92, 'Permission', '权限管理', 'Odometer', 'menu', '/system/permission', 90);
 
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 10);
 INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 20);

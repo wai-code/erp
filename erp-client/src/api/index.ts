@@ -40,6 +40,10 @@ export const getResourceList = () => {
     return api.get('/resource/list'); // Return the Axios Promise directly
 };
 
+export const getRoleList = () => {
+    return api.get('/role/list'); // Return the Axios Promise directly
+};
+
 // Export API methods with request configurations
 export const getUserList = () => {
     return api.get('/user/list'); // Return the Axios Promise directly
@@ -47,4 +51,8 @@ export const getUserList = () => {
 
 export const getUserPermission = (userName: string) => {
     return api.get(`/user/${userName}/permission`)
+}
+
+export const getRolePermission = (roleName: string) => {
+    return api.get(`/role/${roleName}/permission`)
 }

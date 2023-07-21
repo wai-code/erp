@@ -42,7 +42,7 @@ function convertToRouteRecordRaw(resources: Resource[]): RouteRecordRaw[] {
             path: resource.url,
             component: () => import(`../views/${resource.name}.vue`),
             meta: {
-                title: resource.title,
+                title: resource.label,
                 resource_id: resource.id,
             },
         };
@@ -72,6 +72,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    console.log(to)
     document.title = `${to.meta.title} | 5Plus ERP System`;
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
@@ -80,6 +81,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next();
     }
+    console.log(to)
 });
 
 export default router;

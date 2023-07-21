@@ -40,13 +40,11 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { useTagsStore } from "../store/tags";
-import { usePermissStore } from "../store/permiss";
-import { useRouter, RouteRecordRaw } from "vue-router";
+import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { Lock, User } from "@element-plus/icons-vue";
 import * as api from "../api";
-import { MenuItem } from "../interfaces";
 
 interface LoginInfo {
   name: string;
@@ -82,9 +80,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
       }
       localStorage.setItem("username", param.name);
       localStorage.setItem("token", response.data.token);
-      const store = usePermissStore();
-      store.init();
-      initRoutes(store.getMenus);
       router.push("/");
       return true;
     } else {
@@ -93,36 +88,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   });
 };
-
-function initRoutes(menus: MenuItem[]) {
-  for (let menu of menus) {
-    if (menu.type == "data") {
-      continue;
-    }
-    router.addRoute("Home", convertMenusToRouters(menu));
-  }
-}
-
-function convertMenusToRouters(menuItem: MenuItem): RouteRecordRaw {
-  const routeConfig: RouteRecordRaw = {
-    path: menuItem.url,
-    name: menuItem.name,
-    component: () => import(`../views/${menuItem.name}.vue`),
-    meta: {
-      title: menuItem.title,
-      resource: menuItem.id.toString(),
-    },
-    children: [],
-  };
-
-  if (menuItem.children && menuItem.children.length > 0) {
-    routeConfig.children = menuItem.children.map((childMenuItem) =>
-      convertMenusToRouters(childMenuItem)
-    );
-  }
-
-  return routeConfig;
-}
 
 const tags = useTagsStore();
 tags.clearTags();

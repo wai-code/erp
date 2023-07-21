@@ -1,9 +1,9 @@
-export interface MenuItem {
+export interface Resource {
   id: number;
-  icon: string;
   name: string;
   title: string;
+  icon: string;
   type: string;
   url: string;
-  children: MenuItem[];
+  children: Resource[];
 }

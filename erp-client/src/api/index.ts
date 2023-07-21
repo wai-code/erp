@@ -36,6 +36,10 @@ export const login = (user: { name: string, password: string }) => {
     return api.post('/login', user);
 }
 
+export const getResourceList = () => {
+    return api.get('/resource/list'); // Return the Axios Promise directly
+};
+
 // Export API methods with request configurations
 export const getUserList = () => {
     return api.get('/user/list'); // Return the Axios Promise directly

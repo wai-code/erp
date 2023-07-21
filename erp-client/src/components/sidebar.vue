@@ -34,7 +34,11 @@
                   {{ threeItem.title }}
                 </el-menu-item>
               </el-sub-menu>
-              <el-menu-item v-else :index="subItem.url" :key="subItem.url">
+              <el-menu-item
+                v-else
+                :index="subItem.url"
+                :key="subItem.url + item.id"
+              >
                 {{ subItem.title }}
               </el-menu-item>
             </template>
@@ -57,13 +61,12 @@
 import { computed, onMounted, ref } from "vue";
 import { useSidebarStore } from "../store/sidebar";
 import { useRoute } from "vue-router";
-import { usePermissStore } from "../store/permiss";
-import { MenuItem } from "../interfaces";
+import { resourceList } from "../common/global";
+import { Resource } from "../common/interfaces";
 
-const items = ref(<MenuItem[]>[]);
-onMounted(() => {
-  const store = usePermissStore();
-  items.value.push(...store.getMenus);
+const items = ref(<Resource[]>[]);
+onMounted(async () => {
+  items.value.push(...(await resourceList()));
 });
 
 const route = useRoute();

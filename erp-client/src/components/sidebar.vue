@@ -10,9 +10,13 @@
       unique-opened
       router
     >
-      <template v-for="item in items">
+      <template v-for="item in menus">
         <template v-if="item.children">
-          <el-sub-menu :index="item.url" :key="item.url">
+          <el-sub-menu
+            :index="item.url"
+            :key="item.url"
+            v-show="hasPermission(item)"
+          >
             <template #title>
               <el-icon>
                 <component :is="item.icon"></component>
@@ -24,12 +28,14 @@
                 v-if="subItem.children"
                 :index="subItem.url"
                 :key="subItem.url"
+                v-show="hasPermission(subItem)"
               >
                 <template #title>{{ subItem.title }}</template>
                 <el-menu-item
                   v-for="(threeItem, i) in subItem.children"
                   :key="i"
                   :index="threeItem.url"
+                  v-show="hasPermission(threeItem)"
                 >
                   {{ threeItem.title }}
                 </el-menu-item>
@@ -38,6 +44,7 @@
                 v-else
                 :index="subItem.url"
                 :key="subItem.url + item.id"
+                v-show="hasPermission(subItem)"
               >
                 {{ subItem.title }}
               </el-menu-item>
@@ -45,7 +52,11 @@
           </el-sub-menu>
         </template>
         <template v-else>
-          <el-menu-item :index="item.url" :key="item.url">
+          <el-menu-item
+            :index="item.url"
+            :key="item.url"
+            v-show="hasPermission(item)"
+          >
             <el-icon>
               <component :is="item.icon"></component>
             </el-icon>
@@ -61,13 +72,19 @@
 import { computed, onMounted, ref } from "vue";
 import { useSidebarStore } from "../store/sidebar";
 import { useRoute } from "vue-router";
-import { resourceList } from "../common/global";
+import { getResourceList, getPermissions } from "../common/global";
 import { Resource } from "../common/interfaces";
 
-const items = ref(<Resource[]>[]);
+const menus = ref(<Resource[]>[]);
+const permission = ref(<Number[]>[]);
 onMounted(async () => {
-  items.value.push(...(await resourceList()));
+  menus.value.push(...(await getResourceList()));
+  permission.value.push(...(await getPermissions()));
 });
+
+const hasPermission = (menu: Resource): boolean => {
+  return permission.value.includes(menu.id);
+};
 
 const route = useRoute();
 const onRoutes = computed(() => {

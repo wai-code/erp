@@ -7,13 +7,10 @@ const jwt = require('jsonwebtoken');
 // 查询用户权限的资源信息
 function queryUserPermissions(db, userName, callback) {
     const query = `
-      SELECT resource.* 
-      FROM user
-      JOIN user_role ON user.name = user_role.user_name
-      JOIN role ON user_role.role_name = role.name
-      JOIN permission ON role.name = permission.role_name
-      JOIN resource ON permission.resource_id = resource.id
-      WHERE user.name = ?
+        SELECT DISTINCT p.resource_id
+        FROM user_role ur
+        JOIN permission p ON ur.role_name = p.role_name
+        WHERE ur.user_name = ?
     `;
 
     db.all(query, [userName], (err, rows) => {
@@ -76,14 +73,13 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/resource/list', (req, res) => {
-    const { name } = req.params;
     sqlExec((db) => {
         db.all('SELECT resource.* from resource', (err, result) => {
             if (err) {
                 callback(err);
                 return;
             }
-    
+
             // 将parent_id翻译成嵌套JSON
             const resources = buildNestedJSON(result);
             res.json(resources);
@@ -93,13 +89,20 @@ router.get('/resource/list', (req, res) => {
 
 router.get('/user/:name/permission', (req, res) => {
     const { name } = req.params;
+    const query = `
+        SELECT DISTINCT p.resource_id
+        FROM user_role ur
+        JOIN permission p ON ur.role_name = p.role_name
+        WHERE ur.user_name = ?
+    `;
     sqlExec((db) => {
-        queryUserPermissions(db, name, (err, result) => {
+        db.all(query, name, (err, result) => {
+
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                res.json(result);
+                res.json(result.map(item => item.resource_id));
             }
         })
     });

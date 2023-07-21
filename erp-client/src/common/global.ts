@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { Resource } from './interfaces'
 import * as api from '../api'
 
@@ -13,9 +14,21 @@ async function initResource() {
     return resources;
 }
 
-export const resourceList = async () => {
+export const getResourceList = async () => {
     if (resources.length <= 0) {
         await initResource();
     }
     return resources;
+}
+
+
+export async function getPermissions() {
+    const username = localStorage.getItem("username");
+    const response = await api.getUserPermission(username ? username : "");
+    if (response && response.status === 200) {
+        return response.data;
+    } else {
+        console.log('get user permission failed.')
+        return [];
+    }
 }

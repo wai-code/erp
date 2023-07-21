@@ -48,8 +48,3 @@ export const getUserList = () => {
 export const getUserPermission = (userName: string) => {
     return api.get(`/user/${userName}/permission`)
 }
-
-// If you need to create more API methods, you can define them here as well
-// export const postData = (data) => {
-//   return api.post('/endpoint', data);
-// };

@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/home.vue';
-import { resourceList } from '../common/global';
+import { getResourceList } from '../common/global';
 import { Resource } from '../common/interfaces';
 
 const routes: RouteRecordRaw[] = [
@@ -64,7 +64,7 @@ function convertToRouteRecordRaw(resources: Resource[]): RouteRecordRaw[] {
     return routeRecords;
 }
 
-routes[1].children?.push(...convertToRouteRecordRaw(await resourceList()))
+routes[1].children?.push(...convertToRouteRecordRaw(await getResourceList()))
 
 const router = createRouter({
     history: createWebHashHistory(),

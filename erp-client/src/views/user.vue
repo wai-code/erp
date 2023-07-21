@@ -1,174 +1,190 @@
 <template>
 	<div>
-		<el-row :gutter="20">
-			<el-col :span="12">
-				<el-card shadow="hover">
-					<template #header>
-						<div class="clearfix">
-							<span>基础信息</span>
-						</div>
+		<div class="container">
+			<div class="handle-box">
+				<el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
+					<el-option key="1" label="广东省" value="广东省"></el-option>
+					<el-option key="2" label="湖南省" value="湖南省"></el-option>
+				</el-select>
+				<el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+				<el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
+				<el-button type="primary" :icon="Plus">新增</el-button>
+			</div>
+			<el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
+				<el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+				<el-table-column prop="name" label="用户名"></el-table-column>
+				<el-table-column label="账户余额">
+					<template #default="scope">￥{{ scope.row.money }}</template>
+				</el-table-column>
+				<el-table-column label="头像(查看大图)" align="center">
+					<template #default="scope">
+						<el-image
+							class="table-td-thumb"
+							:src="scope.row.thumb"
+							:z-index="10"
+							:preview-src-list="[scope.row.thumb]"
+							preview-teleported
+						>
+						</el-image>
 					</template>
-					<div class="info">
-						<div class="info-image" @click="showDialog">
-							<el-avatar :size="100" :src="avatarImg" />
-							<span class="info-edit">
-								<i class="el-icon-lx-camerafill"></i>
-							</span>
-						</div>
-						<div class="info-name">{{ name }}</div>
-						<div class="info-desc">不可能！我的代码怎么可能会有bug！</div>
-					</div>
-				</el-card>
-			</el-col>
-			<el-col :span="12">
-				<el-card shadow="hover">
-					<template #header>
-						<div class="clearfix">
-							<span>账户编辑</span>
-						</div>
+				</el-table-column>
+				<el-table-column prop="address" label="地址"></el-table-column>
+				<el-table-column label="状态" align="center">
+					<template #default="scope">
+						<el-tag
+							:type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''"
+						>
+							{{ scope.row.state }}
+						</el-tag>
 					</template>
-					<el-form label-width="90px">
-						<el-form-item label="用户名："> {{ name }} </el-form-item>
-						<el-form-item label="旧密码：">
-							<el-input type="password" v-model="form.old"></el-input>
-						</el-form-item>
-						<el-form-item label="新密码：">
-							<el-input type="password" v-model="form.new"></el-input>
-						</el-form-item>
-						<el-form-item label="个人简介：">
-							<el-input v-model="form.desc"></el-input>
-						</el-form-item>
-						<el-form-item>
-							<el-button type="primary" @click="onSubmit">保存</el-button>
-						</el-form-item>
-					</el-form>
-				</el-card>
-			</el-col>
-		</el-row>
-		<el-dialog title="裁剪图片" v-model="dialogVisible" width="600px">
-			<vue-cropper
-				ref="cropper"
-				:src="imgSrc"
-				:ready="cropImage"
-				:zoom="cropImage"
-				:cropmove="cropImage"
-				style="width: 100%; height: 400px"
-			></vue-cropper>
+				</el-table-column>
 
+				<el-table-column prop="date" label="注册时间"></el-table-column>
+				<el-table-column label="操作" width="220" align="center">
+					<template #default="scope">
+						<el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)" v-permiss="15">
+							编辑
+						</el-button>
+						<el-button text :icon="Delete" class="red" @click="handleDelete(scope.$index)" v-permiss="16">
+							删除
+						</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<div class="pagination">
+				<el-pagination
+					background
+					layout="total, prev, pager, next"
+					:current-page="query.pageIndex"
+					:page-size="query.pageSize"
+					:total="pageTotal"
+					@current-change="handlePageChange"
+				></el-pagination>
+			</div>
+		</div>
+
+		<!-- 编辑弹出框 -->
+		<el-dialog title="编辑" v-model="editVisible" width="30%">
+			<el-form label-width="70px">
+				<el-form-item label="用户名">
+					<el-input v-model="form.name"></el-input>
+				</el-form-item>
+				<el-form-item label="地址">
+					<el-input v-model="form.address"></el-input>
+				</el-form-item>
+			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button class="crop-demo-btn" type="primary"
-						>选择图片
-						<input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
-					</el-button>
-					<el-button type="primary" @click="saveAvatar">上传并保存</el-button>
+					<el-button @click="editVisible = false">取 消</el-button>
+					<el-button type="primary" @click="saveEdit">确 定</el-button>
 				</span>
 			</template>
 		</el-dialog>
 	</div>
 </template>
 
-<script setup lang="ts" name="user">
-import { reactive, ref } from 'vue';
-import VueCropper from 'vue-cropperjs';
-import 'cropperjs/dist/cropper.css';
-import avatar from '../assets/img/img.jpg';
+<script setup lang="ts" name="basetable">
+import { ref, reactive } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { Delete, Edit, Search, Plus } from '@element-plus/icons-vue';
 
-const name = localStorage.getItem('ms_username');
-const form = reactive({
-	old: '',
-	new: '',
-	desc: '不可能！我的代码怎么可能会有bug！'
+interface TableItem {
+	id: number;
+	name: string;
+	money: string;
+	state: string;
+	date: string;
+	address: string;
+}
+
+const query = reactive({
+	address: '',
+	name: '',
+	pageIndex: 1,
+	pageSize: 10
 });
-const onSubmit = () => {};
+const tableData = ref<TableItem[]>([]);
+const pageTotal = ref(0);
+// 获取表格数据
+const getData = () => {
+	fetchData().then(res => {
+		tableData.value = res.data.list;
+		pageTotal.value = res.data.pageTotal || 50;
+	});
+};
+getData();
 
-const avatarImg = ref(avatar);
-const imgSrc = ref('');
-const cropImg = ref('');
-const dialogVisible = ref(false);
-const cropper: any = ref();
-
-const showDialog = () => {
-	dialogVisible.value = true;
-	imgSrc.value = avatarImg.value;
+// 查询操作
+const handleSearch = () => {
+	query.pageIndex = 1;
+	getData();
+};
+// 分页导航
+const handlePageChange = (val: number) => {
+	query.pageIndex = val;
+	getData();
 };
 
-const setImage = (e: any) => {
-	const file = e.target.files[0];
-	if (!file.type.includes('image/')) {
-		return;
-	}
-	const reader = new FileReader();
-	reader.onload = (event: any) => {
-		dialogVisible.value = true;
-		imgSrc.value = event.target.result;
-		cropper.value && cropper.value.replace(event.target.result);
-	};
-	reader.readAsDataURL(file);
+// 删除操作
+const handleDelete = (index: number) => {
+	// 二次确认删除
+	ElMessageBox.confirm('确定要删除吗？', '提示', {
+		type: 'warning'
+	})
+		.then(() => {
+			ElMessage.success('删除成功');
+			tableData.value.splice(index, 1);
+		})
+		.catch(() => {});
 };
 
-const cropImage = () => {
-	cropImg.value = cropper.value.getCroppedCanvas().toDataURL();
+// 表格编辑时弹窗和保存
+const editVisible = ref(false);
+let form = reactive({
+	name: '',
+	address: ''
+});
+let idx: number = -1;
+const handleEdit = (index: number, row: any) => {
+	idx = index;
+	form.name = row.name;
+	form.address = row.address;
+	editVisible.value = true;
 };
-
-const saveAvatar = () => {
-	avatarImg.value = cropImg.value;
-	dialogVisible.value = false;
+const saveEdit = () => {
+	editVisible.value = false;
+	ElMessage.success(`修改第 ${idx + 1} 行成功`);
+	tableData.value[idx].name = form.name;
+	tableData.value[idx].address = form.address;
 };
 </script>
 
 <style scoped>
-.info {
-	text-align: center;
-	padding: 35px 0;
-}
-.info-image {
-	position: relative;
-	margin: auto;
-	width: 100px;
-	height: 100px;
-	background: #f8f8f8;
-	border: 1px solid #eee;
-	border-radius: 50px;
-	overflow: hidden;
+.handle-box {
+	margin-bottom: 20px;
 }
 
-.info-edit {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: absolute;
-	left: 0;
-	top: 0;
+.handle-select {
+	width: 120px;
+}
+
+.handle-input {
+	width: 300px;
+}
+.table {
 	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.5);
-	opacity: 0;
-	transition: opacity 0.3s ease;
+	font-size: 14px;
 }
-.info-edit i {
-	color: #eee;
-	font-size: 25px;
+.red {
+	color: #F56C6C;
 }
-.info-image:hover .info-edit {
-	opacity: 1;
+.mr10 {
+	margin-right: 10px;
 }
-.info-name {
-	margin: 15px 0 10px;
-	font-size: 24px;
-	font-weight: 500;
-	color: #262626;
-}
-.crop-demo-btn {
-	position: relative;
-}
-.crop-input {
-	position: absolute;
-	width: 100px;
+.table-td-thumb {
+	display: block;
+	margin: auto;
+	width: 40px;
 	height: 40px;
-	left: 0;
-	top: 0;
-	opacity: 0;
-	cursor: pointer;
 }
 </style>

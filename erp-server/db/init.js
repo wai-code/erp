@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS resource (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   title TEXT NOT NULL,
+  icon TEXT,
   type TEXT,
   url TEXT,
   parent_id INTEGER
@@ -121,21 +122,33 @@ INSERT INTO user_role (user_name,role_name) VALUES ('zhangsan','Purchaser');
 INSERT INTO user_role (user_name,role_name) VALUES ('lisi','Salesperson');
 INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (1, 'dashboard', '采购管理', 'menu', '/dashboard', NULL);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (2, 'todo', '我的待办清单', 'data', '/api/todo/list', NULL);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (3, 'product', '产品管理', 'menu', '/purchase/product', 1);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (4, 'supplier', '供应商管理', 'menu', '/purchase/supplier', 1);
-INSERT INTO resource (id, name, title, type, url, parent_id) VALUES (5, 'orders', '采购订单', 'menu', '/purchase/orders', 1);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (10, 'Dashboard', '首页', 'Odometer', 'menu', '/dashboard', NULL);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (20, 'Purchase', '采购管理', 'Odometer', 'menu', '/purchase', NULL);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (21, 'Product', '产品管理', 'Odometer', 'menu', '/purchase/product', 20);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (22, 'Supplier', '供应商管理', 'Odometer', 'menu', '/purchase/supplier', 20);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (23, 'PurchaseOrder', '采购订单', 'Odometer', 'menu', '/purchase/order', 20);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (30, 'Sales', '采购管理', 'Odometer', 'menu', '/sales', NULL);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (31, 'Customer', '客户管理', 'Odometer', 'menu', '/sales/customer', 30);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (32, 'SalesOrder', '采购管理', 'Odometer', 'menu', '/sales/order', 30);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (90, 'System', '系统管理', 'Odometer', 'menu', '/system', NULL);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (91, 'User', '用户管理', 'Odometer', 'menu', '/system/user', 90);
+INSERT INTO resource (id, name, title, icon, type, url, parent_id) VALUES (92, 'User', '权限管理', 'Odometer', 'menu', '/system/permission', 90);
 
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 1);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 2);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 3);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 4);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 5);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 10);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 20);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 21);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 22);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 23);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 30);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 31);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 32);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 90);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 91);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 92);
 
-INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', 1);
-INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', 1);
-INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', 1);
+INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', 10);
+INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', 10);
+INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', 10);
 `;
 
 // 初始化数据

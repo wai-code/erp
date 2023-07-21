@@ -1,6 +1,9 @@
 http://localhost:3000/api/user/list
 
 ###
+http://localhost:3000/api/resource/list
+
+###
 http://localhost:3000/api/user/5plus/permission
 
 ###

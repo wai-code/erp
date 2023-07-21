@@ -36,6 +36,7 @@ function buildNestedJSON(rows, parentId = null) {
         if (row.parent_id === parentId) {
             const resource = {
                 id: row.id,
+                icon: row.icon,
                 name: row.name,
                 title: row.title,
                 type: row.type,
@@ -72,6 +73,22 @@ router.post('/login', (req, res) => {
             res.status(401).json({ message: 'Invalid credentials.' });
         });
     })
+});
+
+router.get('/resource/list', (req, res) => {
+    const { name } = req.params;
+    sqlExec((db) => {
+        db.all('SELECT resource.* from resource', (err, result) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+    
+            // 将parent_id翻译成嵌套JSON
+            const resources = buildNestedJSON(result);
+            res.json(resources);
+        })
+    });
 });
 
 router.get('/user/:name/permission', (req, res) => {

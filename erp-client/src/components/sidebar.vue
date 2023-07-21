@@ -13,10 +13,10 @@
       <template v-for="item in menus">
         <template v-if="item.children">
           <el-sub-menu
-            :index="item.url"
+            :index="item.name"
             :key="item.name"
             v-show="hasPermission(item)"
-            @click="handleMenuItemClick(subItem)"
+            @click="handleMenuItemClick(item)"
           >
             <template #title>
               <el-icon>
@@ -27,26 +27,17 @@
             <template v-for="subItem in item.children">
               <el-sub-menu
                 v-if="subItem.children"
-                :index="subItem.url"
-                :key="subItem.url"
+                :index="subItem.name"
+                :key="subItem.name"
                 v-show="hasPermission(subItem)"
                 @click="handleMenuItemClick(subItem)"
               >
                 <template #title>{{ subItem.label }}</template>
-                <el-menu-item
-                  v-for="(threeItem, i) in subItem.children"
-                  :key="i"
-                  :index="threeItem.url"
-                  v-show="hasPermission(threeItem)"
-                  @click="handleMenuItemClick(subItem)"
-                >
-                  {{ threeItem.label }}
-                </el-menu-item>
               </el-sub-menu>
               <el-menu-item
                 v-else
-                :index="subItem.url"
-                :key="subItem.url + item.id"
+                :index="subItem.name"
+                :key="subItem.name + item.id"
                 v-show="hasPermission(subItem)"
                 @click="handleMenuItemClick(subItem)"
               >
@@ -57,10 +48,10 @@
         </template>
         <template v-else>
           <el-menu-item
-            :index="item.url"
-            :key="item.url"
+            :index="item.name"
+            :key="item.name"
             v-show="hasPermission(item)"
-            @click="handleMenuItemClick(subItem)"
+            @click="handleMenuItemClick(item)"
           >
             <el-icon>
               <component :is="item.icon"></component>

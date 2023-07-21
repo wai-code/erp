@@ -124,14 +124,14 @@ INSERT INTO user_role (user_name,role_name) VALUES ('lisi','Salesperson');
 INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (10, 'Dashboard', '首页', 'Odometer', 'menu', '/dashboard', NULL);
-INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (20, 'Purchase', '采购管理', 'Odometer', 'menu', '/purchase', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (20, 'Purchase', '采购管理', 'Odometer', 'menu', NULL, NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (21, 'Product', '产品管理', 'Odometer', 'menu', '/purchase/product', 20);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (22, 'Supplier', '供应商管理', 'Odometer', 'menu', '/purchase/supplier', 20);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (23, 'PurchaseOrder', '采购订单', 'Odometer', 'menu', '/purchase/order', 20);
-INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (30, 'Sales', '销售管理', 'Odometer', 'menu', '/sales', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (30, 'Sales', '销售管理', 'Odometer', 'menu', NULL, NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (31, 'Customer', '客户管理', 'Odometer', 'menu', '/sales/customer', 30);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (32, 'SalesOrder', '销售订单', 'Odometer', 'menu', '/sales/order', 30);
-INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (90, 'System', '系统管理', 'Odometer', 'menu', '/system', NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (90, 'System', '系统管理', 'Odometer', 'menu', NULL, NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (91, 'User', '用户管理', 'Odometer', 'menu', '/system/user', 90);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (92, 'Permission', '权限管理', 'Odometer', 'menu', '/system/permission', 90);
 

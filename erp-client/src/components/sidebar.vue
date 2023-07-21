@@ -14,8 +14,9 @@
         <template v-if="item.children">
           <el-sub-menu
             :index="item.url"
-            :key="item.url"
+            :key="item.name"
             v-show="hasPermission(item)"
+            @click="handleMenuItemClick(subItem)"
           >
             <template #title>
               <el-icon>
@@ -29,6 +30,7 @@
                 :index="subItem.url"
                 :key="subItem.url"
                 v-show="hasPermission(subItem)"
+                @click="handleMenuItemClick(subItem)"
               >
                 <template #title>{{ subItem.label }}</template>
                 <el-menu-item
@@ -36,6 +38,7 @@
                   :key="i"
                   :index="threeItem.url"
                   v-show="hasPermission(threeItem)"
+                  @click="handleMenuItemClick(subItem)"
                 >
                   {{ threeItem.label }}
                 </el-menu-item>
@@ -45,6 +48,7 @@
                 :index="subItem.url"
                 :key="subItem.url + item.id"
                 v-show="hasPermission(subItem)"
+                @click="handleMenuItemClick(subItem)"
               >
                 {{ subItem.label }}
               </el-menu-item>
@@ -56,6 +60,7 @@
             :index="item.url"
             :key="item.url"
             v-show="hasPermission(item)"
+            @click="handleMenuItemClick(subItem)"
           >
             <el-icon>
               <component :is="item.icon"></component>
@@ -71,7 +76,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useSidebarStore } from "../store/sidebar";
-import { useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { getResourceList, getPermissions } from "../common/global";
 import { Resource } from "../common/interfaces";
 
@@ -84,6 +89,13 @@ onMounted(async () => {
 
 const hasPermission = (menu: Resource): boolean => {
   return permission.value.includes(menu.id);
+};
+
+const router = useRouter();
+const handleMenuItemClick = (menu: Resource) => {
+  if (menu.url) {
+    router.push(menu.url);
+  }
 };
 
 const route = useRoute();

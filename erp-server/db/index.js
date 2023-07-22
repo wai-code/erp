@@ -3,10 +3,9 @@ const { createPool } = require('generic-pool');
 const config = require('./config')
 
 // 创建数据库连接池
-let dbPool = null;
 
 function createDBPool() {
-    dbPool = createPool({
+    return createPool({
         max: 30,
         min: 5,
         create: () => {
@@ -29,9 +28,10 @@ function createDBPool() {
     });
 }
 
+let dbPool = null;
 function getDBPool() {
     if (!dbPool) {
-        createDBPool();
+        dbPool = createDBPool();
     }
     return dbPool;
 }
@@ -44,14 +44,21 @@ function sqlExec(callback) {
         dbRef = db;
     }).catch((err) => {
         console.error('Failed to acquire database connection:', err);
-        if (dbRef) {
-            dbPool.release(dbRef); // 释放连接回连接池
-        }
+        closeDb(dbRef);
     }).finally(() => {
-        if (dbRef) {
-            dbPool.release(dbRef); // 释放连接回连接池
-        }
+        closeDb(dbRef);
     });
 }
 
-module.exports = {sqlExec};
+async function openDB() {
+    return await getDBPool().acquire();
+}
+
+function closeDb(db) {
+    if (db) {
+        getDBPool().release(db); // 释放连接回连接池
+    }
+
+}
+
+module.exports = { sqlExec, openDB, closeDb };

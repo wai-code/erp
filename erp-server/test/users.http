@@ -3,20 +3,20 @@ POST http://localhost:3000/api/user
 content-type: application/json
 
 {
-    "name": "xsc",
+    "name": "csx",
     "password": "6789",
     "role": "Administrator"
 }
 
 ### 删除用户
-http://localhost:3000/api/user/delete/zhangsan
+http://localhost:3000/api/user/delete/csx
 
 ### 修改用户
-POST http://localhost:3000/api/user/lisi
+POST http://localhost:3000/api/user/xsc
 content-type: application/json
 
 {
-    "password": "6789",
+    "password": "12345",
     "role": "Administrator"
 }
 
@@ -52,7 +52,8 @@ content-type: application/json
 
 {
     "name": "test",
-    "password": "123456"
+    "password": "123456",
+    "role": "Administrator"
 }
 
 ###

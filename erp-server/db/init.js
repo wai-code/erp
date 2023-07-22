@@ -44,9 +44,13 @@ CREATE TABLE IF NOT EXISTS permission (
 CREATE TABLE IF NOT EXISTS supplier (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
-  address TEXT,
   email TEXT,
   phone TEXT,
+  source TEXT,
+  address TEXT,
+  contact_name TEXT,
+  contact_email TEXT,
+  contact_phone TEXT,
   other TEXT,
   created_at DATETIME,
   updated_at DATETIME,
@@ -66,7 +70,7 @@ CREATE TABLE IF NOT EXISTS product (
   CONSTRAINT unique_product UNIQUE (name, model)
 );
 
-CREATE TABLE IF NOT EXISTS purchas (
+CREATE TABLE IF NOT EXISTS purchase (
   id INTEGER PRIMARY KEY,
   project_name TEXT,
   product_name TEXT,
@@ -125,8 +129,8 @@ INSERT INTO user_role (user_name,role_name) VALUES ('wangwu','Accountant');
 
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (10, 'Dashboard', '首页', 'Odometer', 'menu', '/dashboard', NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (20, 'Purchase', '采购管理', 'Odometer', 'menu', NULL, NULL);
-INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (21, 'Product', '产品管理', 'Odometer', 'menu', '/purchase/product', 20);
-INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (22, 'Supplier', '供应商管理', 'Odometer', 'menu', '/purchase/supplier', 20);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (21, 'Supplier', '供应商管理', 'Odometer', 'menu', '/purchase/supplier', 20);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (22, 'Product', '产品管理', 'Odometer', 'menu', '/purchase/product', 20);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (23, 'PurchaseOrder', '采购订单', 'Odometer', 'menu', '/purchase/order', 20);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (30, 'Sales', '销售管理', 'Odometer', 'menu', NULL, NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (31, 'Customer', '客户管理', 'Odometer', 'menu', '/sales/customer', 30);

@@ -129,7 +129,7 @@ router.post('/role/:name', (req, res) => {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                res.json('Update Role Permission Success');
+                res.json({ success: 'Update Role Permission Success' });
             }
         })
     });
@@ -188,8 +188,10 @@ router.post('/user', (req, res) => {
                         db.run('INSERT INTO user_role(user_name,role_name) values(?,?)',
                             [name, role], function (err) {
                                 if (err) {
+                                    console.error(err);
+                                    res.status(500).json({ error: 'Internal Server Error' });
                                 } else {
-                                    res.status(200).json({ error: 'Create User Success' });
+                                    res.status(200).json({ success: 'Create User Success' });
                                 }
                             })
                     })
@@ -247,7 +249,7 @@ router.post('/user/:name', (req, res) => {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                res.status(200).json({ error: 'Update User Success.' });
+                res.status(200).json({ success: 'Update User Success.' });
             }
         });
     });
@@ -262,7 +264,7 @@ router.get('/user/delete/:name', (req, res) => {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                res.sendStatus(200).json({ error: 'Delete User Success.' });
+                res.json({ success: 'Delete User Success.' });
             }
         });
     });

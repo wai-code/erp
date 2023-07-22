@@ -1,0 +1,33 @@
+###
+http://localhost:3000/api/suppliers
+
+###
+POST http://localhost:3000/api/suppliers
+Content-Type: application/json
+
+{
+    "name":"5plus",
+    "email":"5plus@gmail.com", 
+    "phone":"13333333", 
+    "source":"Alibaba",
+    "address":"Shengzhen,China", 
+    "contact_name":"wumingyong", 
+    "contact_email":"wumingyong@gmail.com", 
+    "contact_phone":"166666666", 
+    "other":"no"
+}
+
+### 
+http://localhost:3000/api/suppliers/1
+
+### 
+POST http://localhost:3000/api/suppliers/1
+Content-Type: application/json
+
+{
+    "name":"5plus",
+    "email":"5plus@gmail.com", 
+    "phone":"19999999", 
+    "source":"Alibaba",
+    "other":"no"
+}

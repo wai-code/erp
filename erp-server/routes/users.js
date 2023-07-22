@@ -1,7 +1,17 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const sqlExec = require('../db').sqlExec;
 const jwt = require('jsonwebtoken');
+
+const validateData = [
+    body('name')
+        .notEmpty().withMessage('用户名不能为空')
+        .isLength({ min: 3, max: 40 }).withMessage('用户名长度必须在3~40个字符'),
+    body('password')
+        .notEmpty().withMessage('密码不能为空')
+        .isLength({ min: 5, max: 20 }).withMessage('密码长度必须在5~40个字符')
+];
 
 function toNumArray(str) {
     const numberArray = str.split(',')
@@ -36,7 +46,12 @@ function buildNestedJSON(rows, parentId = null) {
     return result;
 }
 
-router.post('/login', (req, res) => {
+router.post('/login', validateData, (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, password } = req.body;
     const secretKey = name; // 自定义的秘钥，用于签名令牌
 
@@ -170,7 +185,12 @@ router.get('/user/list', (req, res) => {
 })
 
 // 创建用户
-router.post('/user', (req, res) => {
+router.post('/user', validateData, (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, phone, email, password, role } = req.body;
     console.log(req.body)
     if (!name || !password || !role) {

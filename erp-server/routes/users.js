@@ -3,6 +3,16 @@ const router = express.Router();
 const sqlExec = require('../db').sqlExec;
 const jwt = require('jsonwebtoken');
 
+function toNumArray(str) {
+    const numberArray = str.split(',')
+        .map((item) => item.trim())
+        .filter((item) => item !== '')
+        .map((item) => Number(item))
+        .filter((item) => !isNaN(item));
+
+    return numberArray;
+}
+
 // 递归构建嵌套JSON
 function buildNestedJSON(rows, parentId = null) {
     const result = [];
@@ -90,17 +100,42 @@ router.get('/user/:name/permission', (req, res) => {
     `;
     sqlExec((db) => {
         db.all(query, name, (err, result) => {
-
+            console.log(result)
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                res.json(result.map(item => item.resource_id));
+                res.json(toNumArray(result[0].resource_id));
             }
         })
     });
 });
 
+
+router.post('/role/:name', (req, res) => {
+    console.log(req.body)
+    const { name } = req.params;
+    const { permissions } = req.body;
+
+    if (!name || !permissions) {
+        console.log(`name:${name};permissions:${permissions}`)
+        return res.status(400).json({ error: 'Invalid Params.' });
+    }
+
+    const permiss = toNumArray(permissions).join(',')
+    const query = 'update permission set resource_id = ? where role_name = ?';
+
+    sqlExec((db) => {
+        db.all(query, [permiss, name], (err, result) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                res.json('Update Role Permission Success');
+            }
+        })
+    });
+})
 
 router.get('/role/:name/permission', (req, res) => {
     const { name } = req.params;
@@ -111,12 +146,11 @@ router.get('/role/:name/permission', (req, res) => {
     `;
     sqlExec((db) => {
         db.all(query, name, (err, result) => {
-
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                res.json(result.map(item => item.resource_id));
+                res.json(toNumArray(result[0]?.resource_id));
             }
         })
     });

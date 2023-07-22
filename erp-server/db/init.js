@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS resource (
 CREATE TABLE IF NOT EXISTS permission (
   id INTEGER PRIMARY KEY,
   role_name TEXT NOT NULL,
-  resource_id INTEGER NOT NULL
+  resource_id TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS supplier (
@@ -135,21 +135,10 @@ INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (90, '
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (91, 'User', '用户管理', 'Odometer', 'menu', '/system/user', 90);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (92, 'Permission', '权限管理', 'Odometer', 'menu', '/system/permission', 90);
 
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 10);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 20);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 21);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 22);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 23);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 30);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 31);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 32);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 90);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 91);
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', 92);
-
-INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', 10);
-INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', 10);
-INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', 10);
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', '10,20,21,22,23,30,31,32,90,91,92');
+INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', '10');
+INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', '10');
+INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', '10');
 `;
 
 // 初始化数据

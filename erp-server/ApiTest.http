@@ -27,6 +27,14 @@ http://localhost:3000/api/user/list
 http://localhost:3000/api/resource/list
 
 ###
+POST http://localhost:3000/api/role/Purchaser
+Content-Type: application/json
+
+{
+    "permissions":"10,20,21,22,23,'xsc'"
+}
+
+###
 http://localhost:3000/api/role/list
 
 ###

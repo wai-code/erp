@@ -200,7 +200,6 @@ const success = () => {
     ElMessage.success(`修改第 ${idx + 1} 行用户信息成功`);
   }
 };
-const failed = () => {};
 </script>
 
 <style scoped>

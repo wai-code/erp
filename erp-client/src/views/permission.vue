@@ -15,6 +15,7 @@
       <el-tree
         ref="tree"
         :data="resources"
+        node-key="id"
         default-expand-all
         show-checkbox
         :default-checked-keys="checkedKeys"
@@ -31,7 +32,7 @@ import * as api from "../api";
 import { getResourceList } from "../common/global";
 import { Resource } from "../common/interfaces";
 
-const role = ref<string>('Administrator')
+const role = ref<string>("Administrator");
 const roles = ref<{ id: number; name: string; title: string }[]>([]);
 const resources = ref<Resource[]>([]);
 const checkedKeys = ref<number[]>([]);
@@ -52,9 +53,7 @@ const setDefaultPermission = async () => {
   const resp = await api.getRolePermission(role.value);
   if (resp && resp.status === 200) {
     const resourceIds = <number[]>await resp.data;
-    checkedKeys.value.length = 0;
-    checkedKeys.value.push(...resourceIds);
-    console.log(checkedKeys);
+    checkedKeys.value = resourceIds;
   } else {
     console.log("get role permissions failed.");
   }
@@ -64,6 +63,8 @@ const setDefaultPermission = async () => {
 const tree = ref<InstanceType<typeof ElTree>>();
 const handleChange = async () => {
   await setDefaultPermission();
+  tree.value!.setCheckedKeys(checkedKeys.value);
+  console.log(tree.value!.getCheckedKeys(false));
 };
 
 const onSubmit = () => {

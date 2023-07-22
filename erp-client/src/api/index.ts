@@ -44,6 +44,11 @@ export const getRoleList = () => {
     return api.get('/role/list');
 };
 
+
+export const updateRolePermission = (name: string, permissions: string) => {
+    return api.post(`/role/${name}`, { permissions });
+};
+
 export const getUserList = () => {
     return api.get('/user/list');
 };

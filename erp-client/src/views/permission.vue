@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { ElTree } from "element-plus";
+import { ElTree, ElMessage } from "element-plus";
 import * as api from "../api";
 import { getResourceList } from "../common/global";
 import { Resource } from "../common/interfaces";
@@ -40,12 +40,12 @@ const checkedKeys = ref<number[]>([]);
 onMounted(async () => {
   const response = await api.getRoleList();
   if (response && response.status === 200) {
-    roles.value.push(...(await response.data));
+    roles.value = await response.data;
   } else {
     console.log("get role list failed.");
   }
 
-  resources.value.push(...(await getResourceList()));
+  resources.value = await getResourceList();
   await setDefaultPermission();
 });
 
@@ -59,17 +59,28 @@ const setDefaultPermission = async () => {
   }
 };
 
-// 保存权限
 const tree = ref<InstanceType<typeof ElTree>>();
 const handleChange = async () => {
   await setDefaultPermission();
   tree.value!.setCheckedKeys(checkedKeys.value);
-  console.log(tree.value!.getCheckedKeys(false));
 };
 
 const onSubmit = () => {
   // 获取选中的权限
-  console.log(tree.value!.getCheckedKeys(false));
+  const permissions = tree.value!.getCheckedKeys(false).join(",");
+  api
+    .updateRolePermission(role.value, permissions)
+    .then((resp) => {
+      if (resp && resp.status == 200) {
+        ElMessage.success("设置权限成功");
+      } else {
+        ElMessage.error("设置权限失败");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      ElMessage.error("设置权限失败");
+    });
 };
 </script>
 

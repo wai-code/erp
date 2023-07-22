@@ -100,7 +100,6 @@ router.get('/user/:name/permission', (req, res) => {
     `;
     sqlExec((db) => {
         db.all(query, name, (err, result) => {
-            console.log(result)
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -118,7 +117,6 @@ router.post('/role/:name', (req, res) => {
     const { permissions } = req.body;
 
     if (!name || !permissions) {
-        console.log(`name:${name};permissions:${permissions}`)
         return res.status(400).json({ error: 'Invalid Params.' });
     }
 
@@ -202,6 +200,7 @@ router.post('/user', (req, res) => {
 
 // 更新用户
 router.post('/user/:name', (req, res) => {
+    console.log(req.body)
     const { name } = req.params;
     const { phone, email, password, image, role } = req.body;
 
@@ -226,14 +225,24 @@ router.post('/user/:name', (req, res) => {
     let userSql = '';
     if (setStr) {
         setStr = setStr.slice(0, -1)
-        userSql = `UPDATE user SET ${setStr} where name = '${name}'; 
-            update user_role set role_name = '${role}' where user_name = '${name}';`;
+        userSql = `UPDATE user SET ${setStr} where name = '${name}';`;
     }
 
-    console.log(userSql)
+    let roleSql = ''
+    if (role) {
+        roleSql = `update user_role set role_name = '${role}' where user_name = '${name}';`;
+    }
+
+    const query = userSql + roleSql;
+    if (!query) {
+        res.status(400).json({ error: 'Invalid Parameter' });
+        return;
+    }
+
+    console.log(query)
 
     sqlExec((db) => {
-        db.exec(userSql, function (err) {
+        db.exec(query, function (err) {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });

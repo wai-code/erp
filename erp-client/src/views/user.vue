@@ -48,7 +48,7 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="role">
+          <el-select v-model="form.role">
             <el-option
               v-for="role in roles"
               :label="role.title"
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts" name="basetable">
-import { ref, reactive, onMounted, pushScopeId } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Delete, Edit, Search, Plus, User } from "@element-plus/icons-vue";
 import * as api from "../api";
@@ -87,9 +87,14 @@ interface User {
   role: string;
 }
 
+interface Role {
+  id?: number;
+  name: string;
+  title: string;
+}
+
 const tableData = ref<User[]>([]);
-const role = ref<string>("Administrator");
-const roles = ref<{ id: number; name: string; title: string }[]>([]);
+const roles = ref<Role[]>([]);
 
 onMounted(async () => {
   let res = await api.getUserList();
@@ -129,7 +134,7 @@ const flag = ref<FormFlag>("add");
 const editVisible = ref(false);
 let form = reactive({
   name: "",
-  role: "",
+  role: "Administrator",
   phone: "",
   email: "",
   password: "",
@@ -137,7 +142,7 @@ let form = reactive({
 
 const handleAdd = () => {
   form.name = "";
-  form.role = role.value;
+  form.role = "Administrator";
   form.email = "";
   form.phone = "";
   form.password = "";
@@ -147,13 +152,15 @@ const handleAdd = () => {
 let idx: number = -1;
 const handleEdit = (index: number, row: any) => {
   idx = index;
+
   form.name = row.name;
   form.role = row.role;
   form.email = row.email;
   form.phone = row.phone;
   form.password = row.password;
-  editVisible.value = true;
+
   flag.value = "edit";
+  editVisible.value = true;
 };
 const saveData = () => {
   editVisible.value = false;

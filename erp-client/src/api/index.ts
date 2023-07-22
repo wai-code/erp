@@ -41,12 +41,35 @@ export const getResourceList = () => {
 };
 
 export const getRoleList = () => {
-    return api.get('/role/list'); // Return the Axios Promise directly
+    return api.get('/role/list');
 };
 
-// Export API methods with request configurations
 export const getUserList = () => {
-    return api.get('/user/list'); // Return the Axios Promise directly
+    return api.get('/user/list');
+};
+
+export const addUser = (userInfo: {
+    name: string,
+    phone: string,
+    email: string,
+    password: string,
+    role: string,
+}) => {
+    return api.post(`/user`, userInfo)
+}
+
+export const updateUser = (userInfo: {
+    name: string,
+    role: string,
+    phone: string,
+    email: string,
+    password: string,
+}) => {
+    return api.post(`/user/${userInfo.name}`, userInfo)
+}
+
+export const deleteUser = (name: string) => {
+    return api.get(`/user/delete/${name}`);
 };
 
 export const getUserPermission = (userName: string) => {

@@ -137,71 +137,89 @@ router.get('/user/list', (req, res) => {
     });
 })
 
-// 获取特定用户
-router.get('/user/:id', (req, res) => {
-    const { id } = req.params;
+// 创建用户
+router.post('/user', (req, res) => {
+    const { name, phone, email, password, role } = req.body;
+    console.log(req.body)
+    if (!name || !password || !role) {
+        return res.status(400).json({ error: 'Invalid Params.' });
+    }
+
     sqlExec((db) => {
-        db.get('SELECT * FROM user WHERE id = ?', id, (err, row) => {
+        db.run('INSERT INTO user (name, phone, email, password) VALUES (?, ?, ?, ?)',
+            [name, phone, email, password], function (err) {
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                } else {
+                    sqlExec((db) => {
+                        db.run('INSERT INTO user_role(user_name,role_name) values(?,?)',
+                            [name, role], function (err) {
+                                if (err) {
+                                } else {
+                                    res.status(200).json({ error: 'Create User Success' });
+                                }
+                            })
+                    })
+                }
+            })
+    });
+});
+
+// 更新用户
+router.post('/user/:name', (req, res) => {
+    const { name } = req.params;
+    const { phone, email, password, image, role } = req.body;
+
+    if (!name) {
+        res.status(400).json({ error: 'User Must Be Not NULL.' });
+        return;
+    }
+
+    let setStr = "";
+    if (phone) {
+        setStr = `phone = '${phone}',`
+    }
+    if (email) {
+        setStr += `email = '${email}',`
+    }
+    if (password) {
+        setStr += `password = '${password}',`
+    }
+    if (image) {
+        setStr += `image = '${image}',`
+    }
+    let userSql = '';
+    if (setStr) {
+        setStr = setStr.slice(0, -1)
+        userSql = `UPDATE user SET ${setStr} where name = '${name}'; 
+            update user_role set role_name = '${role}' where user_name = '${name}';`;
+    }
+
+    console.log(userSql)
+
+    sqlExec((db) => {
+        db.exec(userSql, function (err) {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
-            } else if (row) {
-                res.json(row);
             } else {
-                res.status(404).json({ error: 'User not found' });
+                res.status(200).json({ error: 'Update User Success.' });
             }
         });
     });
 });
 
-// 创建用户
-router.post('/user', (req, res) => {
-    const { name, phone, email, password, image } = req.body;
-
-    sqlExec((db) => {
-        db.run('INSERT INTO user (name, phone, email, password, image) VALUES (?, ?, ?, ?, ?)',
-            [name, phone, email, password, image], function (err) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ error: 'Internal Server Error' });
-                } else {
-                    res.json({ id: this.lastID });
-                }
-            });
-    });
-});
-
-// 更新用户
-router.post('/user/:id', (req, res) => {
-    const { id } = req.params;
-    const { name, phone, email, password, image } = req.body;
-    sqlExec((db) => {
-        db.run('UPDATE user SET name = ?, phone = ?, email = ?, password = ?, image = ?,  WHERE id = ?',
-            [name, phone, email, password, image, id], function (err) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ error: 'Internal Server Error' });
-                } else if (this.changes > 0) {
-                    res.sendStatus(200);
-                } else {
-                    res.status(404).json({ error: 'User not found' });
-                }
-            });
-    });
-});
-
 // 删除用户
-router.get('/user/delete/:id', (req, res) => {
-    const { id } = req.params;
+router.get('/user/delete/:name', (req, res) => {
+    const { name } = req.params;
     sqlExec((db) => {
-        db.run('DELETE FROM user WHERE id = ?', id, function (err) {
+        db.exec(`DELETE FROM user WHERE name = '${name}'; delete from user_role where user_name = '${name}'`, function (err) {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });
-            } else if (this.changes > 0) {
-                res.sendStatus(200);
             } else {
-                res.status(404).json({ error: 'User not found' });
+                res.sendStatus(200).json({ error: 'Delete User Success.' });
             }
         });
     });

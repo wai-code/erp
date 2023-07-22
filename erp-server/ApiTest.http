@@ -1,3 +1,26 @@
+### 创建用户
+POST http://localhost:3000/api/user
+content-type: application/json
+
+{
+    "name": "xsc",
+    "password": "6789",
+    "role": "Administrator"
+}
+
+### 删除用户
+http://localhost:3000/api/user/delete/zhangsan
+
+### 修改用户
+POST http://localhost:3000/api/user/lisi
+content-type: application/json
+
+{
+    "password": "6789",
+    "role": "Administrator"
+}
+
+### 查询用户
 http://localhost:3000/api/user/list
 
 ###

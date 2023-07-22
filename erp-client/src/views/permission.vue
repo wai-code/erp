@@ -31,7 +31,7 @@ import * as api from "../api";
 import { getResourceList } from "../common/global";
 import { Resource } from "../common/interfaces";
 
-const role = ref<string>("Administrator");
+const role = ref<string>('Administrator')
 const roles = ref<{ id: number; name: string; title: string }[]>([]);
 const resources = ref<Resource[]>([]);
 const checkedKeys = ref<number[]>([]);
@@ -41,7 +41,7 @@ onMounted(async () => {
   if (response && response.status === 200) {
     roles.value.push(...(await response.data));
   } else {
-    console.log("get user permission failed.");
+    console.log("get role list failed.");
   }
 
   resources.value.push(...(await getResourceList()));

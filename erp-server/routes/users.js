@@ -126,7 +126,7 @@ router.get('/role/:name/permission', (req, res) => {
 router.get('/user/list', (req, res) => {
     sqlExec((db) => {
         // 执行数据库操作
-        db.all('SELECT * FROM user', (err, rows) => {
+        db.all('SELECT user.id,user.name,user.phone,user.email,user_role.role_name as role FROM user left join user_role on user.name = user_role.user_name', (err, rows) => {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Internal Server Error' });

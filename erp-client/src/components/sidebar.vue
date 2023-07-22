@@ -72,7 +72,7 @@ import { getResourceList, getPermissions } from "../common/global";
 import { Resource } from "../common/interfaces";
 
 const menus = ref(<Resource[]>[]);
-const permission = ref(<Number[]>[]);
+const permission = ref(<number[]>[]);
 onMounted(async () => {
   menus.value.push(...(await getResourceList()));
   permission.value.push(...(await getPermissions()));

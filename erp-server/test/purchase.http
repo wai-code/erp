@@ -1,7 +1,7 @@
-###
+### 查询供应商列表
 http://localhost:3000/api/suppliers
 
-###
+### 新增供应商
 POST http://localhost:3000/api/suppliers
 Content-Type: application/json
 
@@ -17,10 +17,10 @@ Content-Type: application/json
     "other":"no"
 }
 
-### 
+### 用ID查询供应商
 http://localhost:3000/api/suppliers/1
 
-### 
+### 用ID更新供应商
 POST http://localhost:3000/api/suppliers/1
 Content-Type: application/json
 
@@ -31,3 +31,6 @@ Content-Type: application/json
     "source":"Alibaba",
     "other":"no"
 }
+
+### 删除指定ID的供应商
+http://localhost:3000/api/suppliers/delete/1

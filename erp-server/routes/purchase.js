@@ -95,7 +95,7 @@ router.post('/suppliers/:id', validateData, async (req, res) => {
 });
 
 // 删除供应商信息
-router.get('/suppliers/:id', async (req, res) => {
+router.get('/suppliers/delete/:id', async (req, res) => {
     const db = await openDB();
     const query = 'DELETE FROM supplier WHERE id = ?';
     db.run(query, [req.params.id], function (err) {

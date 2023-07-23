@@ -15,24 +15,32 @@ const routes: RouteRecordRaw[] = [
                 path: '/system/permission',
                 name: 'Permission',
                 component: () => import('../views/Permission.vue'),
-                meta:{
-                    title:"权限管理"
+                meta: {
+                    title: "权限管理"
                 }
             },
             {
                 path: '/system/user',
                 name: 'User',
                 component: () => import('../views/User.vue'),
-                meta:{
-                    title:"用户管理"
+                meta: {
+                    title: "用户管理"
+                }
+            },
+            {
+                path: '/purchase/supplier',
+                name: 'Supplier',
+                component: () => import('../views/Supplier.vue'),
+                meta: {
+                    title: "供应商管理"
                 }
             },
             {
                 path: '/dashboard',
                 name: 'Dashboard',
                 component: () => import('../views/Dashboard.vue'),
-                meta:{
-                    title:"首页"
+                meta: {
+                    title: "首页"
                 }
             }
         ]

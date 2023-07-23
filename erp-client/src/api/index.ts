@@ -1,6 +1,7 @@
 // api.js
 
 import axios from 'axios';
+import { Supplier } from '../common/interfaces';
 
 const api = axios.create({
     baseURL: '/api', // 基础URL为代理的路径
@@ -84,3 +85,24 @@ export const getUserPermission = (userName: string) => {
 export const getRolePermission = (roleName: string) => {
     return api.get(`/role/${roleName}/permission`)
 }
+
+export const getSuppliers = () => {
+    return api.get(`/suppliers`)
+}
+
+export const getSupplier = (id: number) => {
+    return api.get(`/suppliers/${id}`)
+}
+
+export const addSupplier = (data: any) => {
+    return api.post(`/suppliers`, data)
+}
+
+export const deleteSupplier = (id: number) => {
+    return api.get(`/suppliers/delete/${id}`)
+}
+
+export const updateSupplier = (id: number, data: any) => {
+    return api.post(`/suppliers/${id}`, data)
+}
+

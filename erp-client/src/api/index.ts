@@ -86,6 +86,26 @@ export const getRolePermission = (roleName: string) => {
     return api.get(`/role/${roleName}/permission`)
 }
 
+export const getProducts = () => {
+    return api.get(`/products`)
+}
+
+export const getProduct = (id: number) => {
+    return api.get(`/products/${id}`)
+}
+
+export const addProduct = (data: any) => {
+    return api.post(`/products`, data)
+}
+
+export const deleteProduct = (id: number) => {
+    return api.get(`/products/delete/${id}`)
+}
+
+export const updateProduct = (id: number, data: any) => {
+    return api.post(`/products/${id}`, data)
+}
+
 export const getSuppliers = () => {
     return api.get(`/suppliers`)
 }

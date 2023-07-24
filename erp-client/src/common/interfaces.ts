@@ -24,3 +24,14 @@ export interface Supplier {
   operator?: string | null;
 }
 
+export interface Product {
+  id: number;
+  name: string;
+  model: string;
+  standard: string;
+  supplier_name: string;
+  purchase_price: number;
+  sales_price: number;
+  operator?: string | null;
+}
+

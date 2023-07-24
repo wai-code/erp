@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS product (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   model TEXT NOT NULL,
+  standard TEXT,
   supplier_name TEXT,
   purchase_price DECIMAL(10, 2),
   sales_price DECIMAL(10, 2),

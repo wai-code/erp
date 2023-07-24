@@ -1,0 +1,34 @@
+### 
+http://localhost:3000/api/products
+
+### 
+http://localhost:3000/api/products/1
+
+### 
+POST http://localhost:3000/api/products/
+Content-Type: application/json
+
+{
+    "name":"chuifengji", 
+    "model":"X55", 
+    "standard":"3C", 
+    "supplier_name":"5plus", 
+    "purchase_price": 10, 
+    "sales_price" :15
+}
+
+### 
+http://localhost:3000/api/products/delete/1
+
+### 
+POST http://localhost:3000/api/products/1
+Content-Type: application/json
+
+{
+    "name":"chuifengji", 
+    "model":"X55", 
+    "standard":"3C", 
+    "supplier_name":"5plus", 
+    "purchase_price": 10, 
+    "sales_price" :12
+}

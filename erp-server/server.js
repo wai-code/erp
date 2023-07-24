@@ -1,6 +1,7 @@
 const express = require('express');
 const responseInterceptor = require('./middlewares/responseInterceptor');
 const authInterceptor = require('./middlewares/authInterceptor');
+const routers = require('./routes')
 
 const app = express();
 const port = 3000;
@@ -19,10 +20,9 @@ app.use(authInterceptor);
 app.use(responseInterceptor);
 
 // 引入 api.js 路由
-const usersRouter = require('./routes/users');
-app.use('/api', usersRouter);
-const purchaseRouter = require('./routes/purchase');
-app.use('/api', purchaseRouter);
+for (const r of routers) {
+  app.use('/api', r);
+}
 
 // 启动服务器
 app.listen(port, () => {

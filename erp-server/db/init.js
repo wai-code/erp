@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS product (
 CREATE TABLE IF NOT EXISTS purchase (
   id INTEGER PRIMARY KEY,  -- 主键ID
   order_id TEXT,			-- 关联的三方ID
-  project_name TEXT,       -- 项目名称
+  type TEXT,       -- 采购类型：// 配件 or 产品
   product_id number,        -- 产品ID
   unit_price DECIMAL(10, 2),  -- 单价（金额，10位整数，2位小数）
   purchase_quantity INTEGER,  -- 采购数量

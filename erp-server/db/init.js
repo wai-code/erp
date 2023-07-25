@@ -72,34 +72,51 @@ CREATE TABLE IF NOT EXISTS product (
 );
 
 CREATE TABLE IF NOT EXISTS purchase (
-  id INTEGER PRIMARY KEY,
-  project_name TEXT,
-  product_name TEXT,
-  product_model TEXT,
-  unit_price DECIMAL(10, 2),
-  purchase_quantity INTEGER,
-  arrival_quantity INTEGER,
-  order_date DATE,
-  last_arrival_date DATE,
-  purchase_cycle INTEGER,
-  shipment_method TEXT,
-  shipping_cost DECIMAL(10, 2),
-  corresponding_order TEXT,
-  purchase_contract TEXT,
-  is_completed BOOLEAN,
-  loss_quantity INTEGER,
+  id INTEGER PRIMARY KEY,  -- 主键ID
+  order_id TEXT,			-- 关联的三方ID
+  project_name TEXT,       -- 项目名称
+  product_id number,        -- 产品ID
+  unit_price DECIMAL(10, 2),  -- 单价（金额，10位整数，2位小数）
+  purchase_quantity INTEGER,  -- 采购数量
+  plan_quantity INTEGER,  -- 计划发货数量
+  arrival_quantity INTEGER,   -- 实际到货数量
+  loss_quantity INTEGER,      -- 损耗数量
+  yield DECIMAL(2, 6),        -- 产品良率（小数，2位整数，6位小数）
+  order_date DATE,            -- 下单日期
+  plan_arrival_date DATE,     -- 计划最后到货日期
+  last_arrival_date DATE,     -- 实际最后到货日期
+  purchase_cycle INTEGER,     -- 采购周期（天数）
+  shipping_method TEXT,       -- 运输方式
+  shipping_cost DECIMAL(10, 2),  -- 运费（金额，10位整数，2位小数）
+  other_cost DECIMAL(10, 2),    -- 其他费用（金额，10位整数，2位小数）
+  is_completed BOOLEAN,         -- 是否完成采购
+  description TEXT,             -- 描述
+  created_at DATETIME,          -- 创建时间
+  updated_at DATETIME,          -- 更新时间
+  operator TEXT                 -- 操作人员
+);
+
+CREATE TABLE IF NOT EXISTS purchase_arrival_plan (
+  id INTEGER PRIMARY KEY,  -- 主键ID
+  purchase_id INTEGER, -- 订单ID
+  plan_quantity INTEGER, -- 批次计划发货数量
+  plan_date DATE,  -- 批次计划发货日期
+  is_completed BOOLEAN  -- 是否按时发货
   created_at DATETIME,
   updated_at DATETIME,
   operator TEXT
 );
 
-CREATE TABLE IF NOT EXISTS inbound_record (
+CREATE TABLE IF NOT EXISTS inbound (
   id INTEGER PRIMARY KEY,
-  product_name TEXT,
-  product_model TEXT,
-  purchase_project TEXT,
-  incoming_quantity INTEGER,
-  purchase_unit_price DECIMAL(10, 2),
+  purchase_id INTEGER, -- 订单ID
+  arrival_quantity INTEGER, -- 到货数量
+  arrival_date INTEGER, -- 到货时间
+  incoming_quantity INTEGER, -- 入库数量
+  incoming_date  DATE,		-- 入库日期
+  yield DECIMAL(2, 6),        -- 产品良率（小数，2位整数，6位小数）
+  shipping_method TEXT,       -- 运输方式
+  shipping_cost DECIMAL(10, 2),  -- 运费（金额，10位整数，2位小数）
   created_at DATETIME,
   updated_at DATETIME,
   operator TEXT
@@ -107,10 +124,9 @@ CREATE TABLE IF NOT EXISTS inbound_record (
 
 CREATE TABLE IF NOT EXISTS inventory (
   id INTEGER PRIMARY KEY,
-  product_name TEXT,
-  product_model TEXT,
-  stock_quantity INTEGER,
-  updated_at DATETIME
+  product_id INTEGER, -- 商品ID
+  stock_quantity INTEGER, -- 库存数量
+  updated_at DATETIME -- 更新时间
 );
 
 INSERT INTO user (name, password) VALUES ('5plus', '123456');

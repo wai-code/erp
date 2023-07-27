@@ -1,14 +1,30 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
-const { openDB, closeDb } = require('../db');
 const router = express.Router();
-const _ = require('lodash');
+const Joi = require('joi');
+const { openDB, closeDb } = require('../db');
+const { object_checker, filer_invalid_field } = require('../common');
 
-const validateData = [
-    body('name')
-        .notEmpty().withMessage('用户名不能为空')
-        .isLength({ min: 5 }).withMessage('用户名长度必须大于5')
-]
+const name_checker = Joi.object({
+    name: Joi.string().min(3).max(30).required(),
+    other: Joi.any()
+});
+
+const address_checker = Joi.object({
+    address: Joi.string().min(3).max(64).required()
+});
+
+const contact_name_checker = Joi.object({
+    contact_name: Joi.string().min(3).max(30).required(),
+});
+
+const contact_email_checker = Joi.object({
+    contact_email: Joi.string().email().required(),
+});
+
+const contact_phone_checker = Joi.object({
+    contact_phone: Joi.string().pattern(/^[0-9]{6,15}$/).required(),
+});
+
 
 // 获取所有供应商信息
 router.get('/suppliers', async (req, res) => {
@@ -41,19 +57,27 @@ router.get('/suppliers/:id', async (req, res) => {
 });
 
 // 添加新的供应商信息
-router.post('/suppliers', validateData, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+router.post('/suppliers', async (req, res) => {
+    const { name, address, contact_name, contact_email, contact_phone, other } = req.body;
+    const obj = { name, address, contact_name, contact_email, contact_phone, other };
+    const param = filer_invalid_field(obj)
+    const checker = object_checker(param, { name_checker, address_checker, contact_name_checker, contact_email_checker, contact_phone_checker });
+    const validationResult = checker.validate(param);
+    if (validationResult.error) {
+        console.error('参数校验失败：', validationResult.error.details);
+        res.status(400).json({ error: '参数校验失败' });
+        return;
     }
 
+    const keys = Object.keys(param).join(",");
+    const markers = Array(Object.keys(param).length).fill('?').join(',');
+
     const db = await openDB();
-    const { name, email, phone, source, address, contact_name, contact_email, contact_phone, other } = req.body;
     const query = `
-      INSERT INTO supplier (name, email, phone, source, address, contact_name, contact_email, contact_phone, other, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+      INSERT INTO supplier (${keys}, created_at, updated_at)
+      VALUES (${markers}, datetime('now'), datetime('now'))
     `;
-    db.run(query, [name, email, phone, source, address, contact_name, contact_email, contact_phone, other], function (err) {
+    db.run(query, Object.values(param), function (err) {
         if (err) {
             console.error('添加供应商信息错误：', err.message);
             res.status(500).json({ error: '添加供应商信息错误' });
@@ -65,16 +89,19 @@ router.post('/suppliers', validateData, async (req, res) => {
 });
 
 // 更新供应商信息
-router.post('/suppliers/:id', validateData, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+router.post('/suppliers/:id', async (req, res) => {
+    const { name, address, contact_name, contact_email, contact_phone, other } = req.body;
+    const obj = { name, address, contact_name, contact_email, contact_phone, other };
+    const param = filer_invalid_field(obj)
+    const checker = object_checker(param, { name_checker, address_checker, contact_name_checker, contact_email_checker, contact_phone_checker });
+    const validationResult = checker.validate(param);
+    if (validationResult.error) {
+        console.error('参数校验失败：', validationResult.error.details);
+        res.status(400).json({ error: '参数校验失败' });
     }
 
-    // 过滤掉未定义的字段，并且忽略ID字段
-    const supplierData = _.pickBy(req.body, (value, key) => key !== 'id' && !_.isUndefined(value));
-    const updateFields = Object.keys(supplierData).map(key => `${key} = ?`).join(', ');
-    const values = Object.values(supplierData);
+    const updateFields = Object.keys(param).map(key => `${key} = ?`).join(', ');
+    const values = Object.values(param);
     values.push(req.params.id);
     const query = `
         UPDATE supplier

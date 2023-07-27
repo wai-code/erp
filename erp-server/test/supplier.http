@@ -6,10 +6,7 @@ POST http://localhost:3000/api/suppliers
 Content-Type: application/json
 
 {
-    "name":"5plus",
-    "email":"5plus@gmail.com", 
-    "phone":"13333333", 
-    "source":"Alibaba",
+    "name":"53p1",
     "address":"Shengzhen,China", 
     "contact_name":"wumingyong", 
     "contact_email":"wumingyong@gmail.com", 
@@ -21,14 +18,11 @@ Content-Type: application/json
 http://localhost:3000/api/suppliers/1
 
 ### 用ID更新供应商
-POST http://localhost:3000/api/suppliers/1
+POST http://localhost:3000/api/suppliers/2
 Content-Type: application/json
 
 {
-    "name":"5plus",
-    "email":"5plus@gmail.com", 
-    "phone":"19999999", 
-    "source":"Alibaba",
+    "name":"xieshu",
     "other":"no"
 }
 

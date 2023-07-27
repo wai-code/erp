@@ -35,3 +35,28 @@ export interface Product {
   operator?: string | null;
 }
 
+type ProductType = "product" | "accessory"
+export interface PurchaseOrderBase {
+  id: number;
+  order_id: string,
+  type: ProductType,
+  product_id: number;
+  unit_price: number;
+  purchase_quantity: number;
+  plan_quantity: number;
+  order_date: Date;
+  plan_arrival_date: Date;
+
+  arrival_quantity: number;
+  loss_quantity: number;
+  pass_rate: number;
+  purchase_cycle: number;
+  shipping_method: string
+  shipping_cost: number;
+  other_cost: number;
+  is_completed: boolean
+  description: string;
+  created_at: Date;
+  updated_at: Date;
+}
+

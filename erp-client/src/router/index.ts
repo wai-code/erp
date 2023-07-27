@@ -44,6 +44,14 @@ const routes: RouteRecordRaw[] = [
                 }
             },
             {
+                path: '/purchase/order',
+                name: 'PurchaseOrder',
+                component: () => import('../views/PurchaseOrder.vue'),
+                meta: {
+                    title: "产品管理"
+                }
+            },
+            {
                 path: '/dashboard',
                 name: 'Dashboard',
                 component: () => import('../views/Dashboard.vue'),

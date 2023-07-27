@@ -44,9 +44,6 @@ CREATE TABLE IF NOT EXISTS permission (
 CREATE TABLE IF NOT EXISTS supplier (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
-  email TEXT,
-  phone TEXT,
-  source TEXT,
   address TEXT,
   contact_name TEXT,
   contact_email TEXT,
@@ -81,7 +78,7 @@ CREATE TABLE IF NOT EXISTS purchase (
   plan_quantity INTEGER,  -- 计划发货数量
   arrival_quantity INTEGER,   -- 实际到货数量
   loss_quantity INTEGER,      -- 损耗数量
-  yield DECIMAL(2, 6),        -- 产品良率（小数，2位整数，6位小数）
+  pass_rate DECIMAL(2, 6),        -- 产品良率（小数，2位整数，6位小数）
   order_date DATE,            -- 下单日期
   plan_arrival_date DATE,     -- 计划最后到货日期
   last_arrival_date DATE,     -- 实际最后到货日期

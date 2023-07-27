@@ -11,9 +11,6 @@ export interface Resource {
 export interface Supplier {
   id: number;
   name: string;
-  email?: string | null;
-  phone?: string | null;
-  source?: string | null;
   address?: string | null;
   contact_name?: string | null;
   contact_email?: string | null;

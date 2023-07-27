@@ -5,16 +5,13 @@
     <el-table :data="suppliers" style="width: 100%">
       <el-table-column label="编号" prop="id" width="50"></el-table-column>
       <el-table-column label="名称" prop="name"></el-table-column>
-      <el-table-column label="邮箱" prop="email"></el-table-column>
-      <el-table-column label="电话" prop="phone"></el-table-column>
-      <el-table-column label="来源" prop="source"></el-table-column>
-      <el-table-column label="地址" prop="address"></el-table-column>
       <el-table-column label="联系人" prop="contact_name"></el-table-column>
       <el-table-column
         label="联系人邮箱"
         prop="contact_email"
       ></el-table-column>
       <el-table-column label="联系电话" prop="contact_phone"></el-table-column>
+      <el-table-column label="地址" prop="address"></el-table-column>
       <el-table-column label="其他信息" prop="other"></el-table-column>
       <el-table-column label="Actions">
         <template #default="{ row }">
@@ -43,30 +40,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="供应商邮箱" prop="email">
-              <el-input v-model="formData.email"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="供应商电话" prop="phone">
-              <el-input v-model="formData.phone"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="供应商来源" prop="source">
-              <el-input v-model="formData.source"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="供应商地址" prop="address">
-              <el-input v-model="formData.address"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="联系人" prop="contact_name">
               <el-input v-model="formData.contact_name"></el-input>
             </el-form-item>
@@ -81,6 +54,13 @@
           <el-col :span="12">
             <el-form-item label="联系人电话" prop="contact_phone">
               <el-input v-model="formData.contact_phone"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="供应商地址" prop="address">
+              <el-input v-model="formData.address"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -125,26 +105,6 @@ const formData: Supplier = reactive({
 });
 const rules = {
   name: [{ required: true, message: "Please enter the name", trigger: "blur" }],
-  email: [
-    { required: true, message: "Please enter the email", trigger: "blur" },
-    {
-      type: "email",
-      message: "Please enter a valid email address",
-      trigger: ["blur", "change"],
-    },
-  ],
-  phone: [
-    {
-      required: true,
-      message: "Please enter the phone number",
-      trigger: "blur",
-    },
-    {
-      pattern: /^\d{8,12}$/,
-      message: "Please enter a valid phone number",
-      trigger: ["blur", "change"],
-    },
-  ],
 };
 
 // Methods

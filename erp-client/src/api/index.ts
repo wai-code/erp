@@ -1,7 +1,5 @@
-// api.js
-
 import axios from 'axios';
-import { Supplier } from '../common/interfaces';
+import router from '../router';
 
 const api = axios.create({
     baseURL: '/api', // 基础URL为代理的路径
@@ -17,18 +15,28 @@ api.interceptors.request.use(
         // For non-login requests, retrieve token from localStorage and add it to the request headers
         if (config.url !== '/login') {
             const token = localStorage.getItem('token');
-            const username: string | null = localStorage.getItem('username');
             if (token && config.headers) {
                 config.headers['token'] = token;
-            }
-            if (username && config.headers) {
-                config.headers['username'] = username;
             }
         }
 
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Add a response interceptor
+api.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => {
+        if (error.response.status === 403 || error.response.status === 401) {
+            // Redirect to login page
+            router.push('/login');
+        }
         return Promise.reject(error);
     }
 );

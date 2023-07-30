@@ -16,7 +16,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'Permission',
                 component: () => import('../views/Permission.vue'),
                 meta: {
-                    title: "权限管理"
+                    title: "权限管理",
+                    requiresAuth: true
                 }
             },
             {
@@ -24,7 +25,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'User',
                 component: () => import('../views/User.vue'),
                 meta: {
-                    title: "用户管理"
+                    title: "用户管理",
+                    requiresAuth: true
                 }
             },
             {
@@ -32,7 +34,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'Supplier',
                 component: () => import('../views/Supplier.vue'),
                 meta: {
-                    title: "供应商管理"
+                    title: "供应商管理",
+                    requiresAuth: true
                 }
             },
             {
@@ -40,7 +43,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'Product',
                 component: () => import('../views/Product.vue'),
                 meta: {
-                    title: "产品管理"
+                    title: "产品管理",
+                    requiresAuth: true
                 }
             },
             {
@@ -48,7 +52,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'PurchaseOrder',
                 component: () => import('../views/PurchaseOrder.vue'),
                 meta: {
-                    title: "产品管理"
+                    title: "产品管理",
+                    requiresAuth: true
                 }
             },
             {
@@ -56,7 +61,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'Dashboard',
                 component: () => import('../views/Dashboard.vue'),
                 meta: {
-                    title: "首页"
+                    title: "首页",
+                    requiresAuth: true
                 }
             }
         ]
@@ -85,11 +91,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    console.log(to)
     document.title = `${to.meta.title} | 5Plus ERP System`;
+    const requiresAuth = to.meta.requiresAuth;
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
-    if (to.path !== '/login' && (!token || !username)) {
+    if (requiresAuth && (!token || !username)) {
         next('/login');
     } else {
         next();

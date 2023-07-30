@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const sqlExec = require('../db').sqlExec;
 const jwt = require('jsonwebtoken');
+const { secretKey } = require('../config');
 
 const validateData = [
     body('name')
@@ -53,7 +54,6 @@ router.post('/login', validateData, (req, res) => {
     }
 
     const { name, password } = req.body;
-    const secretKey = name; // 自定义的秘钥，用于签名令牌
 
     // 在真实应用中，应该根据用户名查询数据库验证密码
     sqlExec(db => {
@@ -65,7 +65,7 @@ router.post('/login', validateData, (req, res) => {
             }
 
             if (row && row.name === name && row.password === password) {
-                const token = jwt.sign({ name, password }, secretKey, { expiresIn: '1h' });
+                const token = jwt.sign({ username: name }, secretKey, { expiresIn: '1h' });
                 res.json({ token });
                 return;
             }

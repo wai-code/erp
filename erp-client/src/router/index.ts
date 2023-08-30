@@ -52,7 +52,7 @@ const routes: RouteRecordRaw[] = [
                 name: 'PurchaseOrder',
                 component: () => import('../views/PurchaseOrder.vue'),
                 meta: {
-                    title: "产品管理",
+                    title: "采购订单",
                     requiresAuth: true
                 }
             },

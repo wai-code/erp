@@ -119,6 +119,44 @@ CREATE TABLE IF NOT EXISTS inbound (
   operator TEXT
 );
 
+-- 创建销售订单表
+CREATE TABLE sales_orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, -- 主键，唯一标识销售订单
+    product_id INTEGER, -- 商品ID
+    quantity INTEGER, -- 数量
+    price REAL, -- 单价
+    customer_shipping_fee REAL, -- 客户运费
+    actual_shipping_fee REAL, -- 实际运费
+    order_date DATE, -- 订单日期
+    latest_shipment_date DATE, -- 最晚出货日期
+    customer_id INTEGER, -- 客户ID
+    shipping_country TEXT, -- 运往国家
+    is_invoice_issued BOOLEAN, -- 是否开发票
+    is_sample_order BOOLEAN, -- 是否样品单
+    other_fees REAL, -- 其他费用
+    profit REAL, -- 利润
+    exchange_rate REAL, -- 参考汇率
+    sales_invoice TEXT, -- 销售发票
+    remarks TEXT, -- 备注
+    created_time DATETIME, -- 记录创建时间
+    updated_time DATETIME, -- 记录更新时间
+    operator TEXT -- 操作人
+);
+
+-- 创建出货记录表
+CREATE TABLE outbound (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, -- 主键，唯一标识出货记录
+    sales_order_id INTEGER, -- 关联的销售订单ID
+    quantity INTEGER, -- 数量
+    shipment_date DATE, -- 发货日期
+    shipping_id TEXT, -- 运单编号
+    shipping_cost REAL, -- 运费
+    created_time DATETIME, -- 记录创建时间
+    updated_time DATETIME, -- 记录更新时间
+    operator TEXT, -- 操作人
+    FOREIGN KEY (sales_order_id) REFERENCES sales_orders (id) -- 外键，关联销售订单表中的订单
+);
+
 CREATE TABLE IF NOT EXISTS inventory (
   id INTEGER PRIMARY KEY,
   product_id INTEGER, -- 商品ID

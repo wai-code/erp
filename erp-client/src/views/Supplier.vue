@@ -13,7 +13,7 @@
       <el-table-column label="联系电话" prop="contact_phone"></el-table-column>
       <el-table-column label="地址" prop="address"></el-table-column>
       <el-table-column label="其他信息" prop="other"></el-table-column>
-      <el-table-column label="Actions">
+      <el-table-column label="操作">
         <template #default="{ row }">
           <span class="action" @click="showEditDialog(row)">编辑</span>
           |

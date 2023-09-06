@@ -119,6 +119,20 @@ CREATE TABLE IF NOT EXISTS inbound (
   operator TEXT
 );
 
+-- 创建客户表
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, -- 客户ID，主键
+    name TEXT UNIQUE, -- 客户名称，唯一值字段
+    address TEXT, -- 客户地址
+    country TEXT, -- 客户国家
+    email TEXT, -- 客户邮箱
+    phone TEXT, -- 客户电话
+    other TEXT, -- 其他信息
+    created_time DATETIME, -- 记录创建时间
+    updated_time DATETIME, -- 记录更新时间
+    operator TEXT -- 操作人
+);
+
 -- 创建销售订单表
 CREATE TABLE sales_orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT, -- 主键，唯一标识销售订单

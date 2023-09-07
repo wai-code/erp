@@ -47,9 +47,9 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useSidebarStore } from "../store/sidebar";
+import { useSidebarStore } from "../../store/sidebar";
 import { useRouter } from "vue-router";
-import imgurl from "../assets/img/img.jpg";
+import imgurl from "../../assets/img/img.jpg";
 
 const username: string | null = localStorage.getItem("ms_username");
 const message: number = 2;

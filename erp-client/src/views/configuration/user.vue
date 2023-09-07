@@ -78,7 +78,7 @@
 import { ref, reactive, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Delete, Edit, Search, Plus, User } from "@element-plus/icons-vue";
-import * as api from "../api";
+import * as api from "../../api";
 
 interface User {
   name: string;

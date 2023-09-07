@@ -1,18 +1,20 @@
 <template>
-  <div class="supplier-management">
+  <div>
     <el-button type="primary" @click="showAddDialog">新增</el-button>
 
     <el-table :data="suppliers" style="width: 100%">
-      <el-table-column label="编号" prop="id" width="50"></el-table-column>
-      <el-table-column label="名称" prop="name"></el-table-column>
-      <el-table-column label="联系人" prop="contact_name"></el-table-column>
+      <el-table-column type="index" label="编号" width="80"/>
+
       <el-table-column
-        label="联系人邮箱"
-        prop="contact_email"
-      ></el-table-column>
-      <el-table-column label="联系电话" prop="contact_phone"></el-table-column>
-      <el-table-column label="地址" prop="address"></el-table-column>
-      <el-table-column label="其他信息" prop="other"></el-table-column>
+          v-for="item in SupplierConfig"
+          :key="item.key"
+          :prop="item.key"
+          :label="item.label"
+          width="item.width"
+          show-overflow-tooltip
+      >
+      </el-table-column>
+
       <el-table-column label="Actions">
         <template #default="{ row }">
           <span class="action" @click="showEditDialog(row)">编辑</span>
@@ -22,59 +24,48 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog
-      v-model="dialogVisible"
-      :title="dialogTitle"
-      @close="resetDialog"
-    >
-      <el-form
-        :model="formData"
-        ref="formRef"
-        :rules="rules"
-        label-width="100px"
-      >
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="供应商名称" prop="name">
-              <el-input v-model="formData.name"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="联系人" prop="contact_name">
-              <el-input v-model="formData.contact_name"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="联系人邮箱" prop="contact_email">
-              <el-input v-model="formData.contact_email"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="联系人电话" prop="contact_phone">
-              <el-input v-model="formData.contact_phone"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="供应商地址" prop="address">
-              <el-input v-model="formData.address"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="其他信息" prop="other">
-              <el-input v-model="formData.other"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" @close="resetDialog" width="600px">
+      <el-form :model="formData" ref="formRef" :rules="rules" label-width="140px">
+        <template v-for="item in SupplierConfig">
+          <el-form-item :label="item.label" :prop="item.key">
+            <template v-if="item.type === 'number'">
+              <el-input-number v-model="formData[item.key]"/>
+            </template>
+
+            <template v-else-if="item.type === 'select'">
+              <el-select v-model="formData[item.key]" placeholder="请选择">
+                <el-option v-for="option in item.options"
+                           :key="option.key"
+                           :label="option.label"
+                           :value="option.key"/>
+              </el-select>
+            </template>
+
+            <template v-else-if="item.type === 'radio'">
+              <el-radio-group v-model="formData[item.key]">
+                <el-radio v-for="option in item.options"
+                          :key="option.key"
+                          :label="option.label"
+                          :value="option.key"/>
+              </el-radio-group>
+            </template>
+
+            <template v-else-if="item.type === 'date'">
+              <el-date-picker type="date" placeholder="选择日期" v-model="formData[item.key]" style="width: 100%"/>
+            </template>
+
+            <template v-else-if="item.type === 'textarea'">
+              <el-input type="textarea" :rows="2" v-model="formData[item.key]" style="resize:none"/>
+            </template>
+
+            <template v-else>
+              <el-input v-model="formData[item.key]"/>
+            </template>
+          </el-form-item>
+        </template>
+
         <el-form-item>
-          <el-button type="primary" @click="submitForm(formRef)"
-            >提交</el-button
-          >
+          <el-button type="primary" @click="submitForm(formRef)">提交</el-button>
           <el-button @click="resetDialog(formRef)">取消</el-button>
         </el-form-item>
       </el-form>
@@ -83,16 +74,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from "vue";
-import type { Ref } from "vue";
-import { ElMessage, FormInstance } from "element-plus";
-import { Supplier } from "../common/interfaces";
+import {ref, reactive, watch, onMounted} from "vue";
+import type {Ref} from "vue";
+import {ElMessage, FormInstance} from "element-plus";
+import {Supplier} from "../../common/interfaces";
 import {
   getSuppliers,
   addSupplier,
   updateSupplier,
   deleteSupplier,
-} from "../api"; // Import your axios API functions
+} from "../../api";
+import {SupplierConfig} from "./Supplier.config"; // Import your axios API functions
 
 // Data
 const suppliers: Ref<Supplier[]> = ref([]);
@@ -104,7 +96,7 @@ const formData: Supplier = reactive({
   name: "",
 });
 const rules = {
-  name: [{ required: true, message: "Please enter the name", trigger: "blur" }],
+  name: [{required: true, message: "Please enter the name", trigger: "blur"}],
 };
 
 // Methods

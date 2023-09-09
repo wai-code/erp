@@ -28,9 +28,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ElTree, ElMessage } from "element-plus";
-import * as api from "../api";
-import { getResourceList } from "../common/global";
-import { Resource } from "../common/interfaces";
+import * as api from "../../api";
+import { getResourceList } from "../../common/global";
+import { Resource } from "../../common/interfaces";
 
 const role = ref<string>("Administrator");
 const roles = ref<{ id: number; name: string; title: string }[]>([]);

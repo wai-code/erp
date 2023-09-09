@@ -94,6 +94,7 @@ export const getRolePermission = (roleName: string) => {
     return api.get(`/role/${roleName}/permission`)
 }
 
+// Product
 export const getProducts = () => {
     return api.get(`/products`)
 }
@@ -114,6 +115,7 @@ export const updateProduct = (id: number, data: any) => {
     return api.post(`/products/${id}`, data)
 }
 
+// Supplier
 export const getSuppliers = () => {
     return api.get(`/suppliers`)
 }
@@ -132,5 +134,26 @@ export const deleteSupplier = (id: number) => {
 
 export const updateSupplier = (id: number, data: any) => {
     return api.post(`/suppliers/${id}`, data)
+}
+
+// Purchase
+export const getPurchases = () => {
+    return api.get(`/purchases`)
+}
+
+export const getPurchase = (id: number) => {
+    return api.get(`/purchases/${id}`)
+}
+
+export const addPurchase = (data: any) => {
+    return api.post(`/purchases`, data)
+}
+
+export const deletePurchase = (id: number) => {
+    return api.get(`/purchases/delete/${id}`)
+}
+
+export const updatePurchase = (id: number, data: any) => {
+    return api.post(`/purchases/${id}`, data)
 }
 

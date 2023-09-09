@@ -209,6 +209,14 @@ INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', '10,20,
 INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', '10');
 INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', '10');
 INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', '10');
+
+INSERT INTO supplier (name, address, contact_name, contact_email, contact_phone, other) VALUES ('供应商A', '地址A', '联系人A', 'a@a.com', '13900000001', '备注A');
+INSERT INTO supplier (name, address, contact_name, contact_email, contact_phone, other) VALUES ('供应商B', '地址B', '联系人B', 'b@b.com', '13900000002', '备注B');
+INSERT INTO supplier (name, address, contact_name, contact_email, contact_phone, other) VALUES ('供应商C', '地址C', '联系人C', 'c@c.com', '13900000003', '备注C');
+
+INSERT INTO product (name, model, standard, supplier_name, purchase_price, sales_price) VALUES ('产品A', '型号A', '标准A', '供应商A', 90, 100);
+INSERT INTO product (name, model, standard, supplier_name, purchase_price, sales_price) VALUES ('产品B', '型号B', '标准B', '供应商B', 90, 100);
+INSERT INTO product (name, model, standard, supplier_name, purchase_price, sales_price) VALUES ('产品C', '型号C', '标准C', '供应商C', 90, 100);
 `;
 
 // 初始化数据

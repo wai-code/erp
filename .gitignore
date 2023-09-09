@@ -4,3 +4,4 @@ package-lock.json
 erp_server.sqlite3
 ~$数据库和接口设计.xlsx
 .VSCodeCounter
+/.idea/*

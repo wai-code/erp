@@ -87,13 +87,13 @@
   import { ref, reactive, watch, onMounted } from "vue";
   import type { Ref } from "vue";
   import { ElMessage, FormInstance } from "element-plus";
-  import { Supplier } from "../common/interfaces";
+  import { Supplier } from "../../common/interfaces";
   import {
     getSuppliers,
     addSupplier,
     updateSupplier,
     deleteSupplier,
-  } from "../api"; // Import your axios API functions
+  } from "../../api"; // Import your axios API functions
   
   // Data
   const suppliers: Ref<Supplier[]> = ref([]);

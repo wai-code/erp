@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/system/permission',
                 name: 'Permission',
-                component: () => import('../views/Permission.vue'),
+                component: () => import('../views/configuration/permission.vue'),
                 meta: {
                     title: "权限管理",
                     requiresAuth: true
@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/system/user',
                 name: 'User',
-                component: () => import('../views/User.vue'),
+                component: () => import('../views/configuration/user.vue'),
                 meta: {
                     title: "用户管理",
                     requiresAuth: true
@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/purchase/supplier',
                 name: 'Supplier',
-                component: () => import('../views/Supplier.vue'),
+                component: () => import('../views/purchase/Supplier.vue'),
                 meta: {
                     title: "供应商管理",
                     requiresAuth: true
@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/purchase/product',
                 name: 'Product',
-                component: () => import('../views/Product.vue'),
+                component: () => import('../views/purchase/Product.vue'),
                 meta: {
                     title: "产品管理",
                     requiresAuth: true
@@ -50,7 +50,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/purchase/order',
                 name: 'PurchaseOrder',
-                component: () => import('../views/PurchaseOrder.vue'),
+                component: () => import('../views/purchase/PurchaseOrder.vue'),
                 meta: {
                     title: "采购订单",
                     requiresAuth: true
@@ -59,7 +59,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/sales/customer',
                 name: 'Customers',
-                component: () => import('../views/Customers.vue'),
+                component: () => import('../views/sales/Customers.vue'),
                 meta: {
                     title: "客户管理",
                     requiresAuth: true
@@ -68,7 +68,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/sales/order',
                 name: 'SalesOrders',
-                component: () => import('../views/SalesOrders.vue'),
+                component: () => import('../views/sales/SalesOrders.vue'),
                 meta: {
                     title: "销售订单",
                     requiresAuth: true
@@ -77,7 +77,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/dashboard',
                 name: 'Dashboard',
-                component: () => import('../views/Dashboard.vue'),
+                component: () => import('../views/frontpage/dashboard.vue'),
                 meta: {
                     title: "首页",
                     requiresAuth: true
@@ -99,7 +99,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
             title: '没有权限',
         },
-        component: () => import(/* webpackChunkName: "403" */ '../views/403.vue'),
+        component: () => import(/* webpackChunkName: "403" */ '../views/error/403.vue'),
     },
 ];
 

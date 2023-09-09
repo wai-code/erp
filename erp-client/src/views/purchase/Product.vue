@@ -1,15 +1,20 @@
 <template>
-  <div class="supplier-management">
+  <div>
     <el-button type="primary" @click="showAddDialog">新增</el-button>
 
     <el-table :data="products" style="width: 100%">
-      <el-table-column label="编号" prop="id" width="50"></el-table-column>
-      <el-table-column label="名称" prop="name"></el-table-column>
-      <el-table-column label="型号" prop="model"></el-table-column>
-      <el-table-column label="制造标准" prop="standard"></el-table-column>
-      <el-table-column label="供应商" prop="supplier_name"></el-table-column>
-      <el-table-column label="采购价格" prop="purchase_price"></el-table-column>
-      <el-table-column label="销售指导价" prop="sales_price"></el-table-column>
+      <el-table-column type="index" label="编号" width="80"/>
+
+      <el-table-column
+          v-for="item in ProductConfig"
+          :key="item.key"
+          :prop="item.key"
+          :label="item.label"
+          width="item.width"
+          show-overflow-tooltip
+      >
+      </el-table-column>
+
       <el-table-column label="Actions">
         <template #default="{ row }">
           <span class="action" @click="showEditDialog(row)">编辑</span>
@@ -19,57 +24,48 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog
-      v-model="dialogVisible"
-      :title="dialogTitle"
-      @close="resetDialog"
-    >
-      <el-form
-        :model="formData"
-        ref="formRef"
-        :rules="rules"
-        label-width="100px"
-      >
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="formData.name"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="型号" prop="model">
-              <el-input v-model="formData.model"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="制造标准" prop="phone">
-              <el-input v-model="formData.standard"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="供应商" prop="supplier_name">
-              <el-input v-model="formData.supplier_name"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="采购价格" prop="purchase_price">
-              <el-input v-model="formData.purchase_price"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="销售价格" prop="sales_price">
-              <el-input v-model="formData.sales_price"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" @close="resetDialog" width="600px">
+      <el-form :model="formData" ref="formRef" :rules="rules" label-width="140px">
+        <template v-for="item in ProductConfig">
+          <el-form-item :label="item.label" :prop="item.key">
+            <template v-if="item.type === 'number'">
+              <el-input-number v-model="formData[item.key]"/>
+            </template>
+
+            <template v-else-if="item.type === 'select'">
+              <el-select v-model="formData[item.key]" placeholder="请选择">
+                <el-option v-for="option in item.options"
+                           :key="option.key"
+                           :label="option.label"
+                           :value="option.key"/>
+              </el-select>
+            </template>
+
+            <template v-else-if="item.type === 'radio'">
+              <el-radio-group v-model="formData[item.key]">
+                <el-radio v-for="option in item.options"
+                          :key="option.key"
+                          :label="option.label"
+                          :value="option.key"/>
+              </el-radio-group>
+            </template>
+
+            <template v-else-if="item.type === 'date'">
+              <el-date-picker type="date" placeholder="选择日期" v-model="formData[item.key]" style="width: 100%"/>
+            </template>
+
+            <template v-else-if="item.type === 'textarea'">
+              <el-input type="textarea" :rows="2" v-model="formData[item.key]" style="resize:none"/>
+            </template>
+
+            <template v-else>
+              <el-input v-model="formData[item.key]"/>
+            </template>
+          </el-form-item>
+        </template>
+
         <el-form-item>
-          <el-button type="primary" @click="submitForm(formRef)"
-            >提交</el-button
-          >
+          <el-button type="primary" @click="submitForm(formRef)">提交</el-button>
           <el-button @click="resetDialog(formRef)">取消</el-button>
         </el-form-item>
       </el-form>
@@ -78,11 +74,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from "vue";
-import type { Ref } from "vue";
-import { ElMessage, FormInstance } from "element-plus";
-import { Product } from "../common/interfaces";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "../api"; // Import your axios API functions
+import {ref, reactive, watch, onMounted} from "vue";
+import type {Ref} from "vue";
+import {ElMessage, FormInstance} from "element-plus";
+import {Product} from "../../common/interfaces";
+import {getProducts, addProduct, updateProduct, deleteProduct} from "../../api";
+import {ProductConfig} from "./Product.config"; // Import your axios API functions
 
 // Data
 const products: Ref<Product[]> = ref([]);
@@ -99,7 +96,7 @@ const formData: Product = reactive({
   sales_price: 0,
 });
 const rules = {
-  name: [{ required: true, message: "Please enter the name", trigger: "blur" }],
+  name: [{required: true, message: "Please enter the name", trigger: "blur"}],
 };
 
 // Methods

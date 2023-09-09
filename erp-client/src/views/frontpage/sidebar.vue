@@ -66,10 +66,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useSidebarStore } from "../store/sidebar";
+import { useSidebarStore } from "../../store/sidebar";
 import { useRouter, useRoute } from "vue-router";
-import { getResourceList, getPermissions } from "../common/global";
-import { Resource } from "../common/interfaces";
+import { getResourceList, getPermissions } from "../../common/global";
+import { Resource } from "../../common/interfaces";
 
 const menus = ref(<Resource[]>[]);
 const permission = ref(<number[]>[]);

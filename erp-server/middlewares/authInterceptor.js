@@ -32,7 +32,7 @@ function checkToken(req, res, next) {
             return res.status(403).json({ message: 'Failed to authenticate token' });
         }
 
-        res.setHeader('username', decoded.username);
+        req.headers['username'] =  decoded.username;
         next()
     });
 }

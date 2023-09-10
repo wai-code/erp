@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const { openDB, closeDb } = require('../db');
-const { object_checker, filer_invalid_field } = require('../common');
+const { object_checker, email_checker, phone_checker, filer_invalid_field } = require('../common');
 
 const name_checker = Joi.object({
     name: Joi.string().min(3).max(30).required(),
@@ -13,13 +13,13 @@ const address_checker = Joi.object({
     address: Joi.string().min(3).max(64).required()
 });
 
-const email_checker = Joi.object({
-    email: Joi.string().email().required(),
-});
+const country_checker = Joi.object({
+    country: Joi.string()
+})
 
-const phone_checker = Joi.object({
-    phone: Joi.string().pattern(/^[0-9]{6,15}$/).required(),
-});
+const operator_checker = Joi.object({
+    operator: Joi.string()
+})
 
 
 // 获取所有客户信息
@@ -55,9 +55,9 @@ router.get('/customers/:id', async (req, res) => {
 // 添加新的客户信息
 router.post('/customers', async (req, res) => {
     const { name, address, country, email, phone, other } = req.body;
-    const obj = { name, address, country, email, phone, other };
+    const obj = { name, address, country, email, phone, other, operator: req.headers['username'] };
     const param = filer_invalid_field(obj)
-    const checker = object_checker(param, { name_checker, address_checker, email_checker, phone_checker });
+    const checker = object_checker(param, { name_checker, address_checker, country_checker, email_checker, phone_checker, operator_checker });
     const validationResult = checker.validate(param);
     if (validationResult.error) {
         console.error('参数校验失败：', validationResult.error.details);
@@ -87,9 +87,9 @@ router.post('/customers', async (req, res) => {
 // 更新客户信息
 router.post('/customers/:id', async (req, res) => {
     const { name, address, country, email, phone, other } = req.body;
-    const obj = { name, address, country, email, phone, other };
+    const obj = { name, address, country, email, phone, other, operator: req.headers['username'] };
     const param = filer_invalid_field(obj)
-    const checker = object_checker(param, { name_checker, address_checker, email_checker, phone_checker });
+    const checker = object_checker(param, { name_checker, address_checker, country_checker, email_checker, phone_checker, operator_checker });
     const validationResult = checker.validate(param);
     if (validationResult.error) {
         console.error('参数校验失败：', validationResult.error.details);

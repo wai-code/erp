@@ -9,12 +9,11 @@ const port = 3000;
 // 初始化数据
 require('./db/init.js');
 
+// 使用中间件
+app.use(authInterceptor);
 
 // 解析请求体中的 JSON 数据
 app.use(express.json());
-
-// 使用中间件
-app.use(authInterceptor);
 
 // 使用中间件
 app.use(responseInterceptor);

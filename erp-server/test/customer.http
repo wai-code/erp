@@ -1,8 +1,7 @@
 @hostname = http://localhost
 @port = 3000
 @host = {{hostname}}:{{port}}
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjVwbHVzIiwiaWF0IjoxNjk0MzU4NjYxLCJleHAiOjE2OTQzNjIyNjF9._euEr970XEB38lFAnTAe4EmrtrYWlWKO2bNkTGnDm5Q
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjVwbHVzIiwiaWF0IjoxNjk0MzYwNDM2LCJleHAiOjE2OTQzNjQwMzZ9.V-_X8OVwC6rnjHcC5P-cM4eMXecQQwBdOA7sueQmG7w
 
 ### 查询客户列表
 {{host}}/api/customers
@@ -14,9 +13,8 @@ Content-Type: application/json
 token: {{token}}
 
 {
-    "name":"53p1",
+    "name":"53p11121",
     "address":"Shengzhen,China", 
-    "name":"wumingyong", 
     "country": "china",
     "email":"wumingyong@gmail.com", 
     "phone":"166666666", 

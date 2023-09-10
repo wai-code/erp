@@ -1,0 +1,42 @@
+@hostname = http://localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjVwbHVzIiwiaWF0IjoxNjk0MzU4NjYxLCJleHAiOjE2OTQzNjIyNjF9._euEr970XEB38lFAnTAe4EmrtrYWlWKO2bNkTGnDm5Q
+
+
+### 查询客户列表
+{{host}}/api/customers
+token: {{token}}
+
+### 新增客户
+POST {{host}}/api/customers
+Content-Type: application/json
+token: {{token}}
+
+{
+    "name":"53p1",
+    "address":"Shengzhen,China", 
+    "name":"wumingyong", 
+    "country": "china",
+    "email":"wumingyong@gmail.com", 
+    "phone":"166666666", 
+    "other":"no"
+}
+
+### 用ID查询客户
+{{host}}/api/customers/1
+token: {{token}}
+
+### 用ID更新客户
+POST {{host}}/api/customers/1
+Content-Type: application/json
+token: {{token}}
+
+{
+    "name":"xieshu",
+    "other":"no"
+}
+
+### 删除指定ID的客户
+{{host}}/api/customers/delete/1
+token: {{token}}

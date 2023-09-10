@@ -1,19 +1,27 @@
+@hostname = http://localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjVwbHVzIiwiaWF0IjoxNjk0MzU4MDUzLCJleHAiOjE2OTQzNjE2NTN9.bcsgOL5j8VT2u4MMma0nUAxmSQUGptD0xh_JE-WGygE
+
 ### 创建用户
-POST http://localhost:3000/api/user
+POST {{host}}/api/user
 content-type: application/json
+token: {{token}}
 
 {
     "name": "csx",
-    "password": "6789",
+    "password": "678910",
     "role": "Administrator"
 }
 
 ### 删除用户
-http://localhost:3000/api/user/delete/csx
+{{host}}/api/user/delete/csx
+token: {{token}}
 
 ### 修改用户
-POST http://localhost:3000/api/user/xsc
+POST {{host}}/api/user/xsc
 content-type: application/json
+token: {{token}}
 
 {
     "password": "12345",
@@ -21,34 +29,42 @@ content-type: application/json
 }
 
 ### 查询用户
-http://localhost:3000/api/user/list
+{{host}}/api/user/list
+token: {{token}}
 
 ###
-http://localhost:3000/api/resource/list
+{{host}}/api/resource/list
+token: {{token}}
 
 ###
-POST http://localhost:3000/api/role/Purchaser
+POST {{host}}/api/role/Purchaser
 Content-Type: application/json
+token: {{token}}
 
 {
     "permissions":"10,20,21,22,23,'xsc'"
 }
 
 ###
-http://localhost:3000/api/role/list
+{{host}}/api/role/list
+token: {{token}}
 
 ###
-http://localhost:3000/api/user/5plus/permission
+{{host}}/api/user/5plus/permission
+token: {{token}}
 
 ###
-http://localhost:3000/api/role/Administrator/permission
+{{host}}/api/role/Administrator/permission
+token: {{token}}
 
 ###
-http://localhost:3000/api/role/Purchaser/permission
+{{host}}/api/role/Purchaser/permission
+token: {{token}}
 
 ###
-POST http://localhost:3000/api/user
+POST {{host}}/api/user
 content-type: application/json
+token: {{token}}
 
 {
     "name": "test",
@@ -57,10 +73,10 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:3000/api/login
+POST {{host}}/api/login
 content-type: application/json
 
 {
-    "name": "test",
+    "name": "5plus",
     "password": "123456"
 }

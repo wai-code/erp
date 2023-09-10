@@ -99,8 +99,8 @@ CREATE TABLE IF NOT EXISTS purchase_arrival_plan (
   plan_quantity INTEGER, -- 批次计划发货数量
   plan_date DATE,  -- 批次计划发货日期
   is_completed BOOLEAN  -- 是否按时发货
-  created_at DATETIME,
-  updated_at DATETIME,
+  created_at DATETIME,          -- 创建时间
+  updated_at DATETIME,          -- 更新时间
   operator TEXT
 );
 
@@ -114,13 +114,13 @@ CREATE TABLE IF NOT EXISTS inbound (
   yield DECIMAL(2, 6),        -- 产品良率（小数，2位整数，6位小数）
   shipping_method TEXT,       -- 运输方式
   shipping_cost DECIMAL(10, 2),  -- 运费（金额，10位整数，2位小数）
-  created_at DATETIME,
-  updated_at DATETIME,
+  created_at DATETIME,          -- 创建时间
+  updated_at DATETIME,          -- 更新时间
   operator TEXT
 );
 
 -- 创建客户表
-CREATE TABLE customers (
+CREATE TABLE customer (
     id INTEGER PRIMARY KEY AUTOINCREMENT, -- 客户ID，主键
     name TEXT UNIQUE, -- 客户名称，唯一值字段
     address TEXT, -- 客户地址
@@ -128,13 +128,13 @@ CREATE TABLE customers (
     email TEXT, -- 客户邮箱
     phone TEXT, -- 客户电话
     other TEXT, -- 其他信息
-    created_time DATETIME, -- 记录创建时间
-    updated_time DATETIME, -- 记录更新时间
+    created_at DATETIME,          -- 创建时间
+    updated_at DATETIME,          -- 更新时间
     operator TEXT -- 操作人
 );
 
 -- 创建销售订单表
-CREATE TABLE sales_orders (
+CREATE TABLE sales_order (
     id INTEGER PRIMARY KEY AUTOINCREMENT, -- 主键，唯一标识销售订单
     product_id INTEGER, -- 商品ID
     quantity INTEGER, -- 数量
@@ -152,8 +152,8 @@ CREATE TABLE sales_orders (
     exchange_rate REAL, -- 参考汇率
     sales_invoice TEXT, -- 销售发票
     remarks TEXT, -- 备注
-    created_time DATETIME, -- 记录创建时间
-    updated_time DATETIME, -- 记录更新时间
+    created_at DATETIME,          -- 创建时间
+    updated_at DATETIME,          -- 更新时间
     operator TEXT -- 操作人
 );
 
@@ -165,8 +165,8 @@ CREATE TABLE outbound (
     shipment_date DATE, -- 发货日期
     shipping_id TEXT, -- 运单编号
     shipping_cost REAL, -- 运费
-    created_time DATETIME, -- 记录创建时间
-    updated_time DATETIME, -- 记录更新时间
+    created_at DATETIME,          -- 创建时间
+    updated_at DATETIME,          -- 更新时间
     operator TEXT, -- 操作人
     FOREIGN KEY (sales_order_id) REFERENCES sales_orders (id) -- 外键，关联销售订单表中的订单
 );

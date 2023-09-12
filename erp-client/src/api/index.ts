@@ -157,3 +157,25 @@ export const updatePurchase = (id: number, data: any) => {
     return api.post(`/purchases/${id}`, data)
 }
 
+
+// Customer
+export const getCustomers = () => {
+    return api.get(`/customers`)
+}
+
+export const getCustomerr = (id: number) => {
+    return api.get(`/customers/${id}`)
+}
+
+export const addCustomer = (data: any) => {
+    return api.post(`/customers`, data)
+}
+
+export const deleteCustomer = (id: number) => {
+    return api.get(`/customers/delete/${id}`)
+}
+
+export const updateCustomer = (id: number, data: any) => {
+    return api.post(`/customers/${id}`, data)
+}
+

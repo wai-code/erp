@@ -21,6 +21,19 @@ export interface Supplier {
   operator?: string | null;
 }
 
+export interface Customer {
+  id: number;
+  name: string;
+  address?: string | null;
+  country?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  other?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  operator?: string | null;
+}
+
 export interface Product {
   id: number;
   name: string;

@@ -76,15 +76,15 @@ CREATE TABLE IF NOT EXISTS purchase (
   unit_price DECIMAL(10, 2),  -- 单价（金额，10位整数，2位小数）
   purchase_quantity INTEGER,  -- 采购数量
   plan_quantity INTEGER,  -- 计划发货数量
-  arrival_quantity INTEGER,   -- 实际到货数量
+  actual_quantity INTEGER,   -- 实际到货数量
   loss_quantity INTEGER,      -- 损耗数量
   pass_rate DECIMAL(2, 6),        -- 产品良率（小数，2位整数，6位小数）
   order_date DATE,            -- 下单日期
-  plan_arrival_date DATE,     -- 计划最后到货日期
-  last_arrival_date DATE,     -- 实际最后到货日期
+  plan_delivery_date DATE,     -- 计划最后到货日期
+  last_delivery_date DATE,     -- 实际最后到货日期
   purchase_cycle INTEGER,     -- 采购周期（天数）
-  shipping_method TEXT,       -- 运输方式
-  shipping_cost DECIMAL(10, 2),  -- 运费（金额，10位整数，2位小数）
+  customer_shipping_fee REAL, -- 客户运费
+  owner_shipping_fee REAL, -- 客户运费
   other_cost DECIMAL(10, 2),    -- 其他费用（金额，10位整数，2位小数）
   is_completed BOOLEAN,         -- 是否完成采购
   description TEXT,             -- 描述
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS purchase (
   operator TEXT                 -- 操作人员
 );
 
-CREATE TABLE IF NOT EXISTS purchase_arrival_plan (
+CREATE TABLE IF NOT EXISTS purchase_delivery_plan (
   id INTEGER PRIMARY KEY,  -- 主键ID
   purchase_id INTEGER, -- 订单ID
   plan_quantity INTEGER, -- 批次计划发货数量
@@ -139,22 +139,32 @@ CREATE TABLE sales_order (
     product_id INTEGER, -- 商品ID
     quantity INTEGER, -- 数量
     price REAL, -- 单价
-    customer_shipping_fee REAL, -- 客户运费
-    actual_shipping_fee REAL, -- 实际运费
     order_date DATE, -- 订单日期
     latest_shipment_date DATE, -- 最晚出货日期
     customer_id INTEGER, -- 客户ID
     shipping_country TEXT, -- 运往国家
     is_invoice_issued BOOLEAN, -- 是否开发票
     is_sample_order BOOLEAN, -- 是否样品单
+    customer_shipping_fee REAL, -- 客户运费
+    owner_shipping_fee REAL, -- 客户运费
     other_fees REAL, -- 其他费用
-    profit REAL, -- 利润
     exchange_rate REAL, -- 参考汇率
     sales_invoice TEXT, -- 销售发票
     remarks TEXT, -- 备注
     created_at DATETIME,          -- 创建时间
     updated_at DATETIME,          -- 更新时间
     operator TEXT -- 操作人
+);
+
+CREATE TABLE IF NOT EXISTS sale_delivery_plan (
+  id INTEGER PRIMARY KEY,  -- 主键ID
+  sale_id INTEGER, -- 订单ID
+  plan_quantity INTEGER, -- 批次计划发货数量
+  plan_date DATE,  -- 批次计划发货日期
+  is_completed BOOLEAN  -- 是否按时发货
+  created_at DATETIME,          -- 创建时间
+  updated_at DATETIME,          -- 更新时间
+  operator TEXT
 );
 
 -- 创建出货记录表
@@ -175,6 +185,7 @@ CREATE TABLE IF NOT EXISTS inventory (
   id INTEGER PRIMARY KEY,
   product_id INTEGER, -- 商品ID
   stock_quantity INTEGER, -- 库存数量
+  buy_price DECIMAL(10, 2),  -- 买入价格
   updated_at DATETIME -- 更新时间
 );
 

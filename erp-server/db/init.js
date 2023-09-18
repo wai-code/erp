@@ -147,10 +147,10 @@ CREATE TABLE sales_order (
     is_sample_order BOOLEAN, -- 是否样品单
     customer_shipping_fee REAL, -- 客户运费
     owner_shipping_fee REAL, -- 客户运费
-    other_fees REAL, -- 其他费用
+    other_fee REAL, -- 其他费用
     exchange_rate REAL, -- 参考汇率
     sales_invoice TEXT, -- 销售发票
-    remarks TEXT, -- 备注
+    description TEXT, -- 备注
     created_at DATETIME,          -- 创建时间
     updated_at DATETIME,          -- 更新时间
     operator TEXT -- 操作人

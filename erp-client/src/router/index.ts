@@ -68,7 +68,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/sales/order',
                 name: 'SalesOrders',
-                component: () => import('../views/sales/SalesOrder.vue'),
+                component: () => import('../views/sales/SaleOrder.vue'),
                 meta: {
                     title: "销售订单",
                     requiresAuth: true

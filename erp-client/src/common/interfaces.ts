@@ -90,3 +90,23 @@ export interface Stock {
   stock_quantity: number;
   updated_at: string | null;
 }
+
+export interface SaleOrderBase {
+  id: number;
+  product_id?: number;
+  price?: number;
+  order_date?: Date;
+  latest_shipment_date?: Date;
+  customer_id?: number;
+  shipping_country?: string;
+  is_invoice_issued?:boolean;
+  is_sample_order?:boolean;
+  customer_shipping_fee?:number;
+  owner_shipping_fee?:number;
+  other_fee?:number;
+  exchange_rate?:number;
+  sales_invoice?:string;
+  description?:string;
+}
+
+

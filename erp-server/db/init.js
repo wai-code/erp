@@ -201,11 +201,13 @@ INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (23, '
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (30, 'Sales', '销售管理', 'Odometer', 'menu', NULL, NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (31, 'Customer', '客户管理', 'Odometer', 'menu', '/sales/customer', 30);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (32, 'SalesOrder', '销售订单', 'Odometer', 'menu', '/sales/order', 30);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (40, 'Inventory', '库存管理', 'Odometer', 'menu', NULL, NULL);
+INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (41, 'Stock', '库存管理', 'Odometer', 'menu', '/inventory/stock', 40);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (90, 'System', '系统管理', 'Odometer', 'menu', NULL, NULL);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (91, 'User', '用户管理', 'Odometer', 'menu', '/system/user', 90);
 INSERT INTO resource (id, name, label, icon, type, url, parent_id) VALUES (92, 'Permission', '权限管理', 'Odometer', 'menu', '/system/permission', 90);
 
-INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', '10,20,21,22,23,30,31,32,90,91,92');
+INSERT INTO permission (role_name, resource_id) VALUES ('Administrator', '10,20,21,22,23,30,31,32,40,41,90,91,92');
 INSERT INTO permission (role_name, resource_id) VALUES ('Purchaser', '10');
 INSERT INTO permission (role_name, resource_id) VALUES ('Salesperson', '10');
 INSERT INTO permission (role_name, resource_id) VALUES ('Accountant', '10');

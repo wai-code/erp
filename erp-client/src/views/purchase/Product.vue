@@ -24,45 +24,41 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" @close="resetDialog" width="600px">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" @close="resetDialog" width="680px">
       <el-form :model="formData" ref="formRef" :rules="rules" label-width="140px">
-        <template v-for="item in ProductConfig">
-          <el-form-item :label="item.label" :prop="item.key">
-            <template v-if="item.type === 'number'">
-              <el-input-number v-model="formData[item.key]"/>
-            </template>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
 
-            <template v-else-if="item.type === 'select'">
-              <el-select v-model="formData[item.key]" placeholder="请选择">
-                <el-option v-for="option in item.options"
-                           :key="option.key"
-                           :label="option.label"
-                           :value="option.key"/>
-              </el-select>
-            </template>
+        <el-form-item label="型号" prop="model">
+          <el-input v-model="formData.model"></el-input>
+        </el-form-item>
 
-            <template v-else-if="item.type === 'radio'">
-              <el-radio-group v-model="formData[item.key]">
-                <el-radio v-for="option in item.options"
-                          :key="option.key"
-                          :label="option.label"
-                          :value="option.key"/>
-              </el-radio-group>
-            </template>
+        <el-form-item label="制造标准" prop="standard">
+          <el-select v-model="formData.standard" placeholder="请选择">
+            <el-option v-for="option in standards"
+                       :key="option.key"
+                       :label="option.label"
+                       :value="option.key"/>
+          </el-select>
+        </el-form-item>
 
-            <template v-else-if="item.type === 'date'">
-              <el-date-picker type="date" placeholder="选择日期" v-model="formData[item.key]" style="width: 100%"/>
-            </template>
+        <el-form-item label="供应商" prop="supplier_name">
+          <el-select v-model="formData.supplier_name" placeholder="请选择">
+            <el-option v-for="option in suppliers"
+                       :key="option.id"
+                       :label="option.name"
+                       :value="option.id"/>
+          </el-select>
+        </el-form-item>
 
-            <template v-else-if="item.type === 'textarea'">
-              <el-input type="textarea" :rows="2" v-model="formData[item.key]" style="resize:none"/>
-            </template>
+        <el-form-item label="采购价格" prop="purchase_price">
+          <el-input-number v-model="formData.purchase_price"></el-input-number>
+        </el-form-item>
 
-            <template v-else>
-              <el-input v-model="formData[item.key]"/>
-            </template>
-          </el-form-item>
-        </template>
+        <el-form-item label="销售价格" prop="sales_price">
+          <el-input-number v-model="formData.sales_price"></el-input-number>
+        </el-form-item>
 
         <el-form-item>
           <el-button type="primary" @click="submitForm(formRef)">提交</el-button>
@@ -77,12 +73,14 @@
 import {ref, reactive, watch, onMounted} from "vue";
 import type {Ref} from "vue";
 import {ElMessage, FormInstance} from "element-plus";
-import {Product} from "../../common/interfaces";
-import {getProducts, addProduct, updateProduct, deleteProduct} from "../../api";
+import {Product, Supplier} from "../../common/interfaces";
+import {getProducts, addProduct, updateProduct, deleteProduct, getSuppliers} from "../../api";
 import {ProductConfig} from "./Product.config"; // Import your axios API functions
 
 // Data
 const products: Ref<Product[]> = ref([]);
+const suppliers: Ref<Supplier[]> = ref([]);
+const standards: Ref<any> = ref([{key: "StandardA", label: "标准A"}, {key: "StandardB", label: "标准B"}])
 const dialogVisible = ref(false);
 const dialogTitle = ref("");
 const formRef = ref<FormInstance>();
@@ -100,12 +98,21 @@ const rules = {
 };
 
 // Methods
-const loadSuppliers = async () => {
+const loadProducts = async () => {
   const response = await getProducts();
   if (response && response.status == 200) {
     products.value = response.data;
   } else {
     console.log("load product data failed.");
+  }
+};
+
+const loadSuppliers = async () => {
+  const response = await getSuppliers();
+  if (response && response.status == 200) {
+    suppliers.value = response.data;
+  } else {
+    console.log("load supplier data failed.");
   }
 };
 
@@ -145,7 +152,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
       selectedSupplierId = -1;
       resetDialog(formEl);
-      await loadSuppliers();
+      await loadProducts();
     } else {
       ElMessage.error("表单填写不正确");
       return false;
@@ -163,7 +170,7 @@ const onDeleteSupplier = async (id: number) => {
   try {
     await deleteProduct(id);
     ElMessage.success("删除产品成功");
-    loadSuppliers();
+    loadProducts();
   } catch (error) {
     console.error(error);
     ElMessage.error("删除产品失败，请稍后重试");
@@ -172,6 +179,7 @@ const onDeleteSupplier = async (id: number) => {
 
 // Lifecycle hooks
 onMounted(() => {
+  loadProducts();
   loadSuppliers();
 });
 </script>

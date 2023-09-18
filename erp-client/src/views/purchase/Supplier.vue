@@ -24,7 +24,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" @close="resetDialog" width="600px">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" @close="resetDialog" width="680px">
       <el-form :model="formData" ref="formRef" :rules="rules" label-width="140px">
         <template v-for="item in SupplierConfig">
           <el-form-item :label="item.label" :prop="item.key">

@@ -157,6 +157,44 @@ export const updatePurchase = (id: number, data: any) => {
     return api.post(`/purchases/${id}`, data)
 }
 
+// PurchaseArrivalPlan
+export const getPurchaseArrivalPlan = (id: number) => {
+    return api.get(`/purchaseArrivalPlan/${id}`)
+}
+
+export const addPurchaseArrivalPlan = (data: any) => {
+    return api.post(`/purchaseArrivalPlan`, data)
+}
+
+export const deletePurchaseArrivalPlan = (id: number) => {
+    return api.get(`/purchaseArrivalPlan/delete/${id}`)
+}
+
+export const updatePurchaseArrivalPlan = (id: number, data: any) => {
+    return api.post(`/purchaseArrivalPlan/${id}`, data)
+}
+
+// Inbound
+export const getInbounds = () => {
+    return api.get(`/inbound`)
+}
+
+export const getInbound = (id: number) => {
+    return api.get(`/inbound/${id}`)
+}
+
+export const addInbound = (data: any) => {
+    return api.post(`/inbound`, data)
+}
+
+export const deleteInbound = (id: number) => {
+    return api.get(`/inbound/delete/${id}`)
+}
+
+export const updateInbound = (id: number, data: any) => {
+    return api.post(`/inbound/${id}`, data)
+}
+
 
 // Customer
 export const getCustomers = () => {
@@ -179,3 +217,15 @@ export const updateCustomer = (id: number, data: any) => {
     return api.post(`/customers/${id}`, data)
 }
 
+// Inventory
+export const getInventory = () => {
+    return api.get(`/stock`)
+}
+
+export const addInventory = (data: any) => {
+    return api.post(`/stock`, data)
+}
+
+export const updateInventory = (id: number, data: any) => {
+    return api.post(`/stock/${id}`, data)
+}

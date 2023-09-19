@@ -6,19 +6,38 @@ const _ = require('lodash');
 const Joi = require("joi");
 const {filer_invalid_field, object_checker} = require("../common");
 
+const order_id_checker = Joi.object({
+    order_id: Joi.string().required(),
+});
+
 const type_checker = Joi.object({
+    order_id: Joi.string().required(),
     type: Joi.string().valid('product', 'accessory').required()
 });
 
-const number_checker = Joi.object({
+const product_id_checker = Joi.object({
+    product_id: Joi.number().required(),
+});
+
+const unit_price_checker = Joi.object({
     unit_price: Joi.number().min(0).required(),
+});
+
+const purchase_quantity_checker = Joi.object({
     purchase_quantity: Joi.number().min(0).required(),
+});
+
+const plan_quantity_checker = Joi.object({
     plan_quantity: Joi.number().min(0).required(),
-    arrival_quantity: Joi.number().min(0).required(),
+});
+
+const operator_checker = Joi.object({
+    operator: Joi.string().required(),
 });
 
 // 获取所有采购订单信息
 router.get('/purchases', async (req, res) => {
+    // TODO 连表查询
     const db = await openDB();
     const query = 'SELECT * FROM purchase';
     db.all(query, [], (err, rows) => {
@@ -49,24 +68,23 @@ router.get('/purchases/:id', async (req, res) => {
 
 // 添加新的采购订单信息
 router.post('/purchases', async (req, res) => {
-    // TODO operator 怎么获取？
-    // TODO pass_rate 怎么计算？
-    // TODO purchase_cycle 怎么计算？ 最后到货日期 - 入库时间？
-    // TODO is_completed 怎么计算？ 最后到货日期更新即完成？
-    const {type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
+    const {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
         last_arrival_date, shipping_method, shipping_cost, other_cost, description} = req.body;
-    const obj = {type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
-        last_arrival_date, shipping_method, shipping_cost, other_cost, description};
+    const obj = {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
+        last_arrival_date, shipping_method, shipping_cost, other_cost, description, operator: req.headers['username']};
     const param = filer_invalid_field(obj)
-    console.log(param)
-    // TODO checker 待补充
     const checker = object_checker(param, {
+        order_id_checker,
         type_checker,
-        number_checker
+        product_id_checker,
+        unit_price_checker,
+        purchase_quantity_checker,
+        plan_quantity_checker,
+        operator_checker
     });
     const validationResult = checker.validate(param);
     if (validationResult.error) {
-        console.error('参数校验失败：', validationResult.error.details);
+        console.error('参数校验失败：', validationResult);
         res.status(400).json({error: '参数校验失败'});
         return;
     }
@@ -90,18 +108,21 @@ router.post('/purchases', async (req, res) => {
     closeDb(db);
 });
 
-// 更新采购订单信息
 router.post('/purchases/:id', async (req, res) => {
     // TODO
-    const {name, address, contact_name, contact_email, contact_phone, other} = req.body;
-    const obj = {name, address, contact_name, contact_email, contact_phone, other};
+    const {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
+        last_arrival_date, shipping_method, shipping_cost, other_cost, description} = req.body;
+    const obj = {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
+        last_arrival_date, shipping_method, shipping_cost, other_cost, description, operator: req.headers['username']};
     const param = filer_invalid_field(obj)
     const checker = object_checker(param, {
-        name_checker,
-        address_checker,
-        contact_name_checker,
-        contact_email_checker,
-        contact_phone_checker
+        order_id_checker,
+        type_checker,
+        product_id_checker,
+        unit_price_checker,
+        purchase_quantity_checker,
+        plan_quantity_checker,
+        operator_checker
     });
     const validationResult = checker.validate(param);
     if (validationResult.error) {

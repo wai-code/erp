@@ -75,6 +75,15 @@ const routes: RouteRecordRaw[] = [
                 }
             },
             {
+                path: '/inventory/stock',
+                name: 'Stock',
+                component: () => import('../views/inventory/Stock.vue'),
+                meta: {
+                    title: "库存管理",
+                    requiresAuth: true
+                }
+            },
+            {
                 path: '/dashboard',
                 name: 'Dashboard',
                 component: () => import('../views/frontpage/dashboard.vue'),

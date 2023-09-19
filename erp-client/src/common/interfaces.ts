@@ -70,8 +70,26 @@ export interface PurchaseOrderBase {
   created_at?: Date;
   updated_at?: Date;
   operator?: string;
+  arrivalPlans: PurchaseArrivalPlan[];
 }
 
+export interface PurchaseArrivalPlan {
+  id?: number;
+  purchase_id?: number;
+  plan_quantity: number;
+  plan_date: Date | null;
+  is_completed?: boolean;
+  created_at?: Date;
+  updated_at?: Date;
+  operator?: string;
+}
+
+export interface Stock {
+  id: number;
+  product_id: number;
+  stock_quantity: number;
+  updated_at: string | null;
+}
 
 export interface SaleOrderBase {
   id: number;

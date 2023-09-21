@@ -9,7 +9,7 @@ function object_checker(obj, checkers) {
         }
     }
 
-    return checker;
+    return checker.options({ allowUnknown: true });
 }
 
 const filer_invalid_field = (obj) => {

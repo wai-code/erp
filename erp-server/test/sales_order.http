@@ -1,0 +1,32 @@
+@hostname = http://localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjVwbHVzIiwiaWF0IjoxNjk1MzA3MDI4LCJleHAiOjE2OTUzMTA2Mjh9.q17KtMyWOkgRbILNPPUgVEqhwwWawwaF4JSlvVwdeP4
+
+### 查询供应商列表
+{{host}}/api/sale/orders
+token: {{token}}
+
+### 新增供应商
+POST {{host}}/api/sale/orders
+Content-Type: application/json
+token: {{token}}
+
+{
+    "product_id": 12345,
+    "quantity": 5,
+    "price": 19.99,
+    "order_date": "2023-09-21",
+    "latest_shipment_date": "2023-09-28",
+    "customer_id": "ABC123",
+    "shipping_country": "USA",
+    "is_invoice_issued": true,
+    "is_sample_order": false,
+    "exchange_rate": 1.2,
+    "sales_invoice": "INV12345",
+    "description": "Sample product description"
+}
+
+### 用ID查询供应商
+{{host}}/api/sale/orders/1
+token: {{token}}

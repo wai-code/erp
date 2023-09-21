@@ -6,5 +6,9 @@ const purchaseRouter = require('./purchase')
 const purchaseArrivalPlanRouter = require('./purchaseArrivalPlan')
 const stockRouter = require('./stock')
 const inboundRouter = require('./inbound')
+const saleOrdersRouter = require('./saleOrder')
 
-module.exports = [usersRouter, supplierRouter, productRouter, purchaseRouter, customerRouter, purchaseArrivalPlanRouter, stockRouter, inboundRouter];
+module.exports = [usersRouter, supplierRouter,
+    productRouter, purchaseRouter,
+    customerRouter, purchaseArrivalPlanRouter,
+    stockRouter, inboundRouter, saleOrdersRouter];

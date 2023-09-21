@@ -201,7 +201,7 @@ export const getCustomers = () => {
     return api.get(`/customers`)
 }
 
-export const getCustomerr = (id: number) => {
+export const getCustomer = (id: number) => {
     return api.get(`/customers/${id}`)
 }
 
@@ -229,3 +229,18 @@ export const addInventory = (data: any) => {
 export const updateInventory = (id: number, data: any) => {
     return api.post(`/stock/${id}`, data)
 }
+
+
+// Sale Order
+export const getSaleOrders = () => {
+    return api.get(`/sale/orders`)
+}
+
+export const getSaleOrder = (id: number) => {
+    return api.get(`/sale/orders/${id}`)
+}
+
+export const addSaleOrder = (data: any) => {
+    return api.post(`/sale/orders`, data)
+}
+

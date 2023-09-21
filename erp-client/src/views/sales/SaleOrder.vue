@@ -32,6 +32,9 @@ import { ElMessage, FormInstance } from "element-plus";
 
 import { SaleOrderConfig } from "./SaleOrder.config";
 import { SaleOrderBase } from "../../common/interfaces";
+
+import { getSaleOrders, getSaleOrder, addSaleOrder } from "../../api";
+
 // Data
 const saleOrders: Ref<SaleOrderBase[]> = ref([]);
 const dialogVisible = ref(false);
@@ -42,10 +45,24 @@ const formData: SaleOrderBase = reactive({
   order_id: "",
 });
 
+// Methods
+const loadSaleOrders = async () => {
+  const response = await getSaleOrders();
+  if (response && response.status == 200) {
+    saleOrders.value = response.data;
+  } else {
+    console.log("load sale orders data failed.");
+  }
+};
+
 const showAddDialog = () => {
   dialogTitle.value = "新增销售订单";
   dialogVisible.value = true;
 };
 
+// Lifecycle hooks
+onMounted(() => {
+  loadSaleOrders();
+});
 </script>
 <style scoped></style>

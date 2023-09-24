@@ -8,10 +8,9 @@ const {filer_invalid_field, object_checker} = require("../common");
 
 // 获取单个采购订单的发货信息
 router.get('/purchaseArrivalPlan/:id', async (req, res) => {
-    console.log(req.params.id)
     const db = await openDB();
-    const query = 'SELECT * FROM purchase_arrival_plan WHERE purchase_id = ?';
-    db.get(query, [req.params.id], (err, row) => {
+    const query = 'SELECT * FROM purchase_delivery_plan WHERE purchase_id = ?';
+    db.all(query, [req.params.id], (err, row) => {
         if (err) {
             console.error('查询采购订单发货信息错误：', err.message);
             res.status(500).json({error: '查询采购订单发货信息错误'});
@@ -45,7 +44,7 @@ router.post('/purchaseArrivalPlan', async (req, res) => {
 
         const db = await openDB();
         const query = `
-          INSERT INTO purchase_arrival_plan (${keys}, updated_at)
+          INSERT INTO purchase_delivery_plan (${keys}, updated_at)
           VALUES (${markers}, datetime('now'))
         `;
         db.run(query, Object.values(param), function (err) {
@@ -80,7 +79,7 @@ router.post('/purchaseArrivalPlan/:id', async (req, res) => {
     const values = Object.values(param);
     values.push(req.params.id);
     const query = `
-        UPDATE purchase_arrival_plan
+        UPDATE purchase_delivery_plan
         SET ${updateFields}, updated_at = datetime('now')
         WHERE id = ?
     `;
@@ -100,7 +99,7 @@ router.post('/purchaseArrivalPlan/:id', async (req, res) => {
 // 删除采购订单的发货信息
 router.get('/purchaseArrivalPlan/delete/:id', async (req, res) => {
     const db = await openDB();
-    const query = 'DELETE FROM purchase_arrival_plan WHERE id = ?';
+    const query = 'DELETE FROM purchase_delivery_plan WHERE id = ?';
     db.run(query, [req.params.id], function (err) {
         if (err) {
             console.error('删除采购订单发货信息错误：', err.message);

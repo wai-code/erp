@@ -5,7 +5,7 @@
     <el-table :data="purchaseOrders" @expand-change="loadPurchaseArrivalPlan" style="width: 100%">
       <el-table-column type="expand">
         <template #default="props">
-          <el-table :data="purchaseArrivalPlans">
+          <el-table :data="purchaseDeliveryPlans">
             <el-table-column type="index" label="编号" width="80"/>
 
             <el-table-column
@@ -20,7 +20,7 @@
 
             <el-table-column label="Actions" width="180">
               <template #default="{ row }">
-                <span class="action" @click="showReceipt(row)">收货</span>
+                <span class="action" @click="showReceipt()">收货</span>
               </template>
             </el-table-column>
           </el-table>
@@ -130,23 +130,23 @@
 
     <el-dialog v-model="receiptVisible" :title="receiptTitle" @close="resetReceipt" width="680px">
       <el-form :model="receiptData" ref="formRef" label-width="140px">
-        <el-form-item label="收货数量" prop="arrival_quantity">
+        <el-form-item label="收货数量" prop="actual_quantity">
           <el-input-number v-model="receiptData.arrival_quantity"></el-input-number>
         </el-form-item>
 
-        <el-form-item label="入库数量" prop="arrival_quantity">
-          <el-input-number v-model="receiptData.arrival_quantity"></el-input-number>
+        <el-form-item label="入库数量" prop="incoming_quantity">
+          <el-input-number v-model="receiptData.incoming_quantity"></el-input-number>
         </el-form-item>
 
-        <el-form-item label="收货时间" prop="arrival_date">
-          <el-date-picker type="date" placeholder="选择日期" v-model="receiptData.arrival_date" style="width: 100%"/>
+        <el-form-item label="收货时间" prop="incoming_date">
+          <el-date-picker type="date" placeholder="选择日期" v-model="receiptData.incoming_date" style="width: 100%"/>
         </el-form-item>
 
-        <el-form-item label="运输方式" prop="shipping_method">
-          <el-input-number v-model="receiptData.shipping_method"/>
+        <el-form-item label="运输方式" prop="customer_shipping_fee">
+          <el-input v-model="receiptData.shipping_method"/>
         </el-form-item>
 
-        <el-form-item label="运费" prop="shipping_cost">
+        <el-form-item label="运费" prop="owner_shipping_fee">
           <el-input-number v-model="receiptData.shipping_cost"></el-input-number>
         </el-form-item>
 
@@ -163,12 +163,12 @@
 import {ref, reactive, onMounted} from "vue";
 import type {Ref} from "vue";
 import {ElMessage, FormInstance} from "element-plus";
-import {Product, PurchaseArrivalPlan, PurchaseOrderBase} from "../../common/interfaces";
+import {Inbound, Product, PurchaseDeliveryPlan, PurchaseOrderBase} from "../../common/interfaces";
 import {
   getPurchases,
   addPurchase,
   updatePurchase,
-  deletePurchase, getProducts, getPurchaseArrivalPlan, addPurchaseArrivalPlan, updatePurchaseArrivalPlan
+  deletePurchase, getProducts, getPurchaseArrivalPlan, addPurchaseArrivalPlan, updatePurchaseArrivalPlan, addInbound
 } from "../../api";
 import {PurchaseOrderConfig} from "./PurchaseOrder.config";
 import {PurchaseArrivalPlanConfig} from "./PurchaseArrivalPlan.config";
@@ -177,7 +177,8 @@ import {PurchaseArrivalPlanConfig} from "./PurchaseArrivalPlan.config";
 const purchaseOrders: Ref<PurchaseOrderBase[]> = ref([]);
 const products: Ref<Product[]> = ref([]);
 const productTypes: Ref<any> = ref([{key: "product", label: "产品"}, {key: "accessory", label: "配件"}]);
-const purchaseArrivalPlans: Ref<PurchaseArrivalPlan[]> = ref([]);
+const currentPurchaseId = ref();
+const purchaseDeliveryPlans: Ref<PurchaseDeliveryPlan[]> = ref([]);
 const addPurchaseVisible = ref(false);
 const addPurchaseTitle = ref("");
 const receiptVisible = ref(false);
@@ -187,12 +188,12 @@ const formData: PurchaseOrderBase = reactive({
   id: -1,
   order_id: "",
   arrivalPlans: [
-    {plan_quantity: Number.POSITIVE_INFINITY, plan_date: null}
+    {plan_date: null, plan_quantity: Number.POSITIVE_INFINITY}
   ]
 });
-const receiptData: PurchaseArrivalPlan = reactive({
-  plan_quantity: Number.POSITIVE_INFINITY,
-  plan_date: null
+const receiptData: Inbound = reactive({
+  arrival_quantity: Number.POSITIVE_INFINITY,
+  incoming_quantity: Number.POSITIVE_INFINITY
 });
 const rules = {
   order_id: [{required: true, message: "Please enter the order id", trigger: "blur"}],
@@ -225,7 +226,7 @@ const loadProducts = async () => {
 const loadPurchaseArrivalPlan = async (row: any, expandRows: any) => {
   const response = await getPurchaseArrivalPlan(row.id);
   if (response && response.status == 200) {
-    purchaseArrivalPlans.value = response.data;
+    purchaseDeliveryPlans.value = response.data;
   } else {
     console.log("load purchase arrival plan data failed.");
   }
@@ -248,11 +249,22 @@ const confirmPurchase = async (formEl: FormInstance | undefined) => {
     if (valid) {
       try {
         const purchaseResp = await addPurchase(formData);
-        const arrivalPlanResp = await addPurchaseArrivalPlan(formData.arrivalPlans);
-        console.log(purchaseResp)
-        console.log(arrivalPlanResp)
-        if (purchaseResp && purchaseResp.status == 200 && arrivalPlanResp && arrivalPlanResp.status == 200) {
+        if (purchaseResp && purchaseResp.status == 200) {
           ElMessage.success("新增采购订单成功");
+
+          console.log('purchaseResp');
+          console.log(purchaseResp);
+          currentPurchaseId.value = purchaseResp.data.id;
+          const purchaseArrivalPlans = formData.arrivalPlans;
+          for (let i = 0; i < purchaseArrivalPlans.length; i++) {
+            let purchaseArrivalPlan = purchaseArrivalPlans[i];
+            Object.assign(purchaseArrivalPlan, {purchase_id: currentPurchaseId.value});
+          }
+
+          const deliveryPlanResp = await addPurchaseArrivalPlan(formData.arrivalPlans);
+          if (deliveryPlanResp && deliveryPlanResp.status == 200) {
+            ElMessage.success("新增采购订单计划成功");
+          }
         }
       } catch (err) {
         ElMessage.error("保存失败");
@@ -267,7 +279,7 @@ const confirmPurchase = async (formEl: FormInstance | undefined) => {
 };
 
 const addArrivalPlans = () => {
-  formData.arrivalPlans.push({id: -1, purchase_id: -1, plan_quantity: Number.POSITIVE_INFINITY, plan_date: null});
+  formData.arrivalPlans.push({plan_date: null, plan_quantity: Number.POSITIVE_INFINITY});
 }
 
 const subArrivalPlans = (index: number) => {
@@ -303,7 +315,7 @@ const confirmReceipt = (formEl: FormInstance | undefined) => {
   formEl.validate(async (valid) => {
     if (valid) {
       try {
-        const resp = await updatePurchaseArrivalPlan(receiptData.id, receiptData);
+        const resp = await addInbound(Object.assign(receiptData, {purchase_id: currentPurchaseId.value}));
         if (resp && resp.status == 200) {
           ElMessage.success("确认收货成功");
         }

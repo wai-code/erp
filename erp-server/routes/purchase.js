@@ -68,10 +68,10 @@ router.get('/purchases/:id', async (req, res) => {
 
 // 添加新的采购订单信息
 router.post('/purchases', async (req, res) => {
-    const {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
-        last_arrival_date, shipping_method, shipping_cost, other_cost, description} = req.body;
-    const obj = {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
-        last_arrival_date, shipping_method, shipping_cost, other_cost, description, operator: req.headers['username']};
+    const {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, actual_quantity, loss_quantity, order_date, plan_delivery_date,
+        last_delivery_date, customer_shipping_fee, owner_shipping_fee, other_cost, description} = req.body;
+    const obj = {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, actual_quantity, loss_quantity, order_date, plan_delivery_date,
+        last_delivery_date, customer_shipping_fee, owner_shipping_fee, other_cost, description, operator: req.headers['username']};
     const param = filer_invalid_field(obj)
     const checker = object_checker(param, {
         order_id_checker,
@@ -110,10 +110,10 @@ router.post('/purchases', async (req, res) => {
 
 router.post('/purchases/:id', async (req, res) => {
     // TODO
-    const {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
-        last_arrival_date, shipping_method, shipping_cost, other_cost, description} = req.body;
-    const obj = {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, arrival_quantity, loss_quantity, order_date, plan_arrival_date,
-        last_arrival_date, shipping_method, shipping_cost, other_cost, description, operator: req.headers['username']};
+    const {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, actual_quantity, loss_quantity, order_date, plan_delivery_date,
+        last_delivery_date, customer_shipping_fee, owner_shipping_fee, other_cost, description} = req.body;
+    const obj = {order_id, type, product_id, unit_price, purchase_quantity, plan_quantity, actual_quantity, loss_quantity, order_date, plan_delivery_date,
+        last_delivery_date, customer_shipping_fee, owner_shipping_fee, other_cost, description, operator: req.headers['username']};
     const param = filer_invalid_field(obj)
     const checker = object_checker(param, {
         order_id_checker,

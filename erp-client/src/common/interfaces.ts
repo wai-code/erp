@@ -55,25 +55,25 @@ export interface PurchaseOrderBase {
   unit_price?: number;
   purchase_quantity?: number;
   plan_quantity?: number;
-  arrival_quantity?: number;
+  actual_quantity?: number;
   loss_quantity?: number;
   pass_rate?: number;
   order_date?: Date;
-  plan_arrival_date?: Date;
-  last_arrival_date?: Date;
+  plan_delivery_date?: Date;
+  last_delivery_date?: Date;
   purchase_cycle?: number;
-  shipping_method?: string
-  shipping_cost?: number;
+  customer_shipping_fee?: string
+  owner_shipping_fee?: number;
   other_cost?: number;
   is_completed?: boolean
   description?: string;
   created_at?: Date;
   updated_at?: Date;
   operator?: string;
-  arrivalPlans: PurchaseArrivalPlan[];
+  arrivalPlans: PurchaseDeliveryPlan[];
 }
 
-export interface PurchaseArrivalPlan {
+export interface PurchaseDeliveryPlan {
   id?: number;
   purchase_id?: number;
   plan_quantity: number;
@@ -99,14 +99,27 @@ export interface SaleOrderBase {
   latest_shipment_date?: Date;
   customer_id?: number;
   shipping_country?: string;
-  is_invoice_issued?:boolean;
-  is_sample_order?:boolean;
-  customer_shipping_fee?:number;
-  owner_shipping_fee?:number;
-  other_fee?:number;
-  exchange_rate?:number;
-  sales_invoice?:string;
-  description?:string;
+  is_invoice_issued?: boolean;
+  is_sample_order?: boolean;
+  customer_shipping_fee?: number;
+  owner_shipping_fee?: number;
+  other_fee?: number;
+  exchange_rate?: number;
+  sales_invoice?: string;
+  description?: string;
 }
 
-
+export interface Inbound {
+  id?: number;
+  purchase_id?: number;
+  arrival_quantity: number;
+  arrival_date?: Date;
+  incoming_quantity: number;
+  incoming_date?: Date;
+  yield?: number;
+  shipping_method?: string;
+  shipping_cost?: number;
+  created_at?: Date;
+  updated_at?: Date;
+  operator?: string;
+}

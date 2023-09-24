@@ -11,7 +11,7 @@
       router
     >
       <template v-for="item in menus">
-        <template v-if="item.children">
+        <template v-if="item.children && item.children.length > 0">
           <el-sub-menu
             :index="item.name"
             :key="item.name"
@@ -26,7 +26,7 @@
             </template>
             <template v-for="subItem in item.children">
               <el-sub-menu
-                v-if="subItem.children"
+                v-if="subItem.children && subItem.children.length > 0"
                 :index="subItem.name"
                 :key="subItem.name"
                 v-show="hasPermission(subItem)"

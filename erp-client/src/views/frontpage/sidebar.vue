@@ -27,7 +27,7 @@
             <template v-for="subItem in item.children">
               <el-sub-menu
                 v-if="subItem.children && subItem.children.length > 0"
-                :index="subItem.name"
+                :index="subItem.url"
                 :key="subItem.name"
                 v-show="hasPermission(subItem)"
                 @click="handleMenuItemClick(subItem)"
@@ -36,7 +36,7 @@
               </el-sub-menu>
               <el-menu-item
                 v-else
-                :index="subItem.name"
+                :index="subItem.url"
                 :key="subItem.name + item.id"
                 v-show="hasPermission(subItem)"
                 @click="handleMenuItemClick(subItem)"
@@ -48,7 +48,7 @@
         </template>
         <template v-else>
           <el-menu-item
-            :index="item.name"
+            :index="item.url"
             :key="item.name"
             v-show="hasPermission(item)"
             @click="handleMenuItemClick(item)"

@@ -15,6 +15,9 @@ app.use(authInterceptor);
 // 解析请求体中的 JSON 数据
 app.use(express.json());
 
+// 解析请求的表单参数 name=xxx&password=xxx
+app.use(express.urlencoded({ extended: false }))
+
 // 使用中间件
 app.use(responseInterceptor);
 
